@@ -15,9 +15,13 @@ import java.util.List;
 @RequestMapping("links")
 public class LinkController {
 
+    @GetMapping("/test")
+    public HttpStatus test() {
+        return HttpStatus.OK;
+    }
+
     @Autowired
     private LinkService linkService;
-
 
     @PutMapping("")
     public ResponseEntity<LinkModel> updateCustomer(@RequestBody LinkModel link, UriComponentsBuilder builder) {

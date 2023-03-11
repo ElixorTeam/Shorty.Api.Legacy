@@ -1,0 +1,5 @@
+rootProject.name = "ShortyRestApi"
+
+includeBuild 'EurekaServer'
+includeBuild 'ApiGateWay'
+includeBuild 'LinkShortener'
