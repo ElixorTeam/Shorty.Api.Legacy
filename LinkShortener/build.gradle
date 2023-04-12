@@ -35,6 +35,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 
+    // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+    implementation 'org.modelmapper:modelmapper:2.1.1'
 
 }
 
