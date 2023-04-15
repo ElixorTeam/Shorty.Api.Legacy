@@ -12,7 +12,6 @@ import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
 import java.util.Map;
 import java.util.UUID;
 
-
 @RestController
 @RequestMapping("/links")
 public class LinkController {
