@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/links")
+@RequestMapping("/api")
 public class LinkController {
 
     //region Properties && constructor
