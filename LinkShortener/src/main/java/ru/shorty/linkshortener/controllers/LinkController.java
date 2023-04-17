@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/links")
+@RequestMapping("/api/links")
 public class LinkController {
 
     //region Properties && constructor
@@ -40,23 +40,23 @@ public class LinkController {
     }
 
     @GetMapping("/route_ref/{routeRef}")
-    public ResponseEntity<?> getByUid(@PathVariable String routeRef) {
+    public ResponseEntity<?> getByRef(@PathVariable String routeRef) {
         return new ResponseEntity<>(linkService.getByRouteRef(routeRef), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{link_uid}")
+    @DeleteMapping("/{link_uid}")
     public ResponseEntity<?> deleteByUid(@PathVariable UUID link_uid) {
         linkService.deleteByUid(link_uid);
         return new ResponseEntity<>(Map.of("msg", "success"), HttpStatus.OK);
     }
 
-    @PutMapping("/put/{link_uid}")
+    @PutMapping("/{link_uid}")
     public ResponseEntity<?> updateLink(@PathVariable UUID link_uid, @RequestBody LinkDto dto) {
         linkService.updateLink(link_uid, dto);
         return new ResponseEntity<>(Map.of("msg", "success"), HttpStatus.OK);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/")
     public ResponseEntity<?> createLink(@RequestBody LinkDto dto) {
         linkService.createLink(dto);
         return new ResponseEntity<>(Map.of("msg", "success"), HttpStatus.OK);
@@ -73,7 +73,7 @@ public class LinkController {
 
     @ExceptionHandler
     public ResponseEntity<?> LinkTitleAlreadyExists(LinkTitleAlreadyExistsException exception) {
-        return new ResponseEntity<>(Map.of("msg", "link with this title is already exists"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(Map.of("msg", "Link with this title is already exists"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
@@ -83,7 +83,7 @@ public class LinkController {
 
     @ExceptionHandler
     public ResponseEntity<?> linkDoesNotExists(LinkDoesNotExistsException exception) {
-        return new ResponseEntity<>(Map.of("msg", "link doesn't exists"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(Map.of("msg", "Link doesn't exists"), HttpStatus.BAD_REQUEST);
     }
 
     //endregion
