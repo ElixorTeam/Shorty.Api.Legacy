@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.shorty.linkshortener.dto.LinkDto;
+import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadeExistsException;
 import ru.shorty.linkshortener.models.LinkModel;
 import ru.shorty.linkshortener.exceptions.LinkDtoNullException;
 import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
@@ -52,6 +53,11 @@ public class LinkService {
         return convertLinkModelToDto(model);
     }
 
+    public LinkDto getByRouteRef(String routeRef) {
+        LinkModel model = linkRepository.findByRefRoute(routeRef).orElseThrow(LinkDoesNotExistsException::new);
+        return convertLinkModelToDto(model);
+    }
+
     public void deleteByUid(UUID link_uid) {
         if (!linkRepository.existsByUid(link_uid))
             throw new LinkDoesNotExistsException();
@@ -63,18 +69,26 @@ public class LinkService {
             throw new LinkDtoNullException();
         if (linkRepository.existsByTitle(dto.getTitle()))
             throw new LinkTitleAlreadyExistsException();
+        if (linkRepository.existsByRefRoute(dto.getRefRoute()))
+            throw new LinkRouteRefAlreadeExistsException();
         LinkModel model = convertLinkDtoToModel(dto);
         linkRepository.save(model);
     }
 
     public void updateLink(UUID link_uid, LinkDto dto) {
         LinkModel model = linkRepository.findByUid(link_uid).orElseThrow(LinkDoesNotExistsException::new);
+        if (dto.getRef() == null || dto.getTitle() == null)
+            throw new LinkDtoNullException();
         if (!Objects.equals(model.getTitle(), dto.getTitle())
                 && linkRepository.existsByTitle(dto.getTitle()))
             throw new LinkTitleAlreadyExistsException();
+        if (!Objects.equals(model.getRefRoute(), dto.getRefRoute())
+                && linkRepository.existsByRefRoute(dto.getRefRoute()))
+            throw new LinkRouteRefAlreadeExistsException();
         model.setRef(dto.getRef());
         model.setTitle(dto.getTitle());
         model.setActive(dto.isActive());
+        model.setRefRoute(dto.getRefRoute());
         linkRepository.save(model);
     }
 

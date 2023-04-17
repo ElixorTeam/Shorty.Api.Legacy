@@ -21,6 +21,9 @@ ext {
 dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-gateway'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    if (osdetector.arch == "aarch_64") {
+        implementation("io.netty:netty-all")
+    }
 }
 
 dependencyManagement {

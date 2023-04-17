@@ -27,6 +27,10 @@ public class LinkModel {
     @Column(name = "REF", nullable = false)
     private String ref;
 
+    @NonNull
+    @Column(name = "REF_ROUTE", unique = true, nullable = false)
+    private String refRoute;
+
     @Column(name = "IS_ACTIVE")
     private boolean active = true;
 

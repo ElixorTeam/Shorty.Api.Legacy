@@ -12,7 +12,11 @@ public interface LinkRepository extends JpaRepository<LinkModel, UUID> {
 
     public Boolean existsByTitle(String title);
 
+    public Boolean existsByRefRoute(String refRoute);
+
     public Optional<LinkModel> findByUid(UUID uuid);
+
+    public Optional<LinkModel> findByRefRoute(String refRoute);
 
     public void deleteByUid(UUID uuid);
 
