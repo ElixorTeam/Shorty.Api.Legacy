@@ -17,6 +17,7 @@ public class CorsConfig {
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowedOrigins(List.of(
+                "http://localhost:3031",
                 "http://localhost:3000",
                 "http://en.localhost:3000",
                 "http://ru.localhost:3000"));
