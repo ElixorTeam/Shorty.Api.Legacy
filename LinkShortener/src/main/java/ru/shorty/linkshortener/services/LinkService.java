@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.shorty.linkshortener.dto.LinkDto;
-import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadeExistsException;
+import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadyExistsException;
 import ru.shorty.linkshortener.models.LinkModel;
 import ru.shorty.linkshortener.exceptions.LinkDtoNullException;
 import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
@@ -70,7 +70,7 @@ public class LinkService {
         if (linkRepository.existsByTitle(dto.getTitle()))
             throw new LinkTitleAlreadyExistsException();
         if (linkRepository.existsByRefRoute(dto.getRefRoute()))
-            throw new LinkRouteRefAlreadeExistsException();
+            throw new LinkRouteRefAlreadyExistsException();
         LinkModel model = convertLinkDtoToModel(dto);
         linkRepository.save(model);
     }
@@ -84,7 +84,7 @@ public class LinkService {
             throw new LinkTitleAlreadyExistsException();
         if (!Objects.equals(model.getRefRoute(), dto.getRefRoute())
                 && linkRepository.existsByRefRoute(dto.getRefRoute()))
-            throw new LinkRouteRefAlreadeExistsException();
+            throw new LinkRouteRefAlreadyExistsException();
         model.setRef(dto.getRef());
         model.setTitle(dto.getTitle());
         model.setActive(dto.isActive());

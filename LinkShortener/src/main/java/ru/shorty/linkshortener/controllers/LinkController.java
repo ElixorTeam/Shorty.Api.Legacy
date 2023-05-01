@@ -5,10 +5,11 @@ import org.jsoup.nodes.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.shorty.linkshortener.MsgUtil;
 import ru.shorty.linkshortener.dto.LinkDto;
 import ru.shorty.linkshortener.exceptions.LinkDoesNotExistsException;
 import ru.shorty.linkshortener.exceptions.LinkDtoNullException;
-import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadeExistsException;
+import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadyExistsException;
 import ru.shorty.linkshortener.services.LinkService;
 import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
 
@@ -49,13 +50,13 @@ public class LinkController {
     @DeleteMapping("/{link_uid}")
     public ResponseEntity<?> deleteByUid(@PathVariable UUID link_uid) {
         linkService.deleteByUid(link_uid);
-        return new ResponseEntity<>(Map.of("msg", "success"), HttpStatus.OK);
+        return new ResponseEntity<>(MsgUtil.success(), HttpStatus.OK);
     }
 
     @PutMapping("/{link_uid}")
     public ResponseEntity<?> updateLink(@PathVariable UUID link_uid, @RequestBody LinkDto dto) {
         linkService.updateLink(link_uid, dto);
-        return new ResponseEntity<>(Map.of("msg", "success"), HttpStatus.OK);
+        return new ResponseEntity<>(MsgUtil.success(), HttpStatus.OK);
     }
 
     @PostMapping("/")
@@ -70,7 +71,7 @@ public class LinkController {
             dto.setTitle(title);
         }
         linkService.createLink(dto);
-        return new ResponseEntity<>(Map.of("msg", "success"), HttpStatus.OK);
+        return new ResponseEntity<>(MsgUtil.success(), HttpStatus.OK);
     }
 
     //endregion
@@ -79,22 +80,22 @@ public class LinkController {
 
     @ExceptionHandler
     public ResponseEntity<?> linkDtoNull(LinkDtoNullException exception) {
-        return new ResponseEntity<>(Map.of("msg", "Link title or ref is null"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(MsgUtil.create("Link title or ref is null"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> LinkTitleAlreadyExists(LinkTitleAlreadyExistsException exception) {
-        return new ResponseEntity<>(Map.of("msg", "Link with this title is already exists"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(MsgUtil.create("Link with this title is already exists"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> routeRefAlreadyExsists(LinkRouteRefAlreadeExistsException exception) {
-        return new ResponseEntity<>(Map.of("msg", "link with this route ref is already exists"), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> routeRefAlreadyExists(LinkRouteRefAlreadyExistsException exception) {
+        return new ResponseEntity<>(MsgUtil.create("link with this routeRef is already exists"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> linkDoesNotExists(LinkDoesNotExistsException exception) {
-        return new ResponseEntity<>(Map.of("msg", "Link doesn't exists"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(MsgUtil.create("Link doesn't exists"), HttpStatus.BAD_REQUEST);
     }
 
     //endregion
