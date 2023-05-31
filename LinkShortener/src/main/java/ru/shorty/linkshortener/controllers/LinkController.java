@@ -3,13 +3,13 @@ package ru.shorty.linkshortener.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.shorty.linkshortener.MsgUtil;
 import ru.shorty.linkshortener.dto.LinkDto;
 import ru.shorty.linkshortener.exceptions.LinkDoesNotExistsException;
 import ru.shorty.linkshortener.exceptions.LinkDtoNullException;
 import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadyExistsException;
-import ru.shorty.linkshortener.services.LinkService;
 import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
+import ru.shorty.linkshortener.services.LinkService;
+import ru.shorty.linkshortener.utils.MsgUtil;
 
 import java.util.UUID;
 

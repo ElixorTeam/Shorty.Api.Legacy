@@ -1,4 +1,4 @@
-package ru.shorty.linkshortener;
+package ru.shorty.linkshortener.utils;
 
 import java.util.Map;
 

@@ -1,4 +1,4 @@
-package ru.shorty.apigateway;
+package ru.shorty.apigateway.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-public class CorsConfig {
+public class CorsCfg {
     @Bean
     public CorsWebFilter corsFilter()
     {

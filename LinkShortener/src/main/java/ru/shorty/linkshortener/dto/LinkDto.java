@@ -2,10 +2,10 @@ package ru.shorty.linkshortener.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang.RandomStringUtils;
-import org.jsoup.Jsoup;
 import ru.shorty.linkshortener.exceptions.LinkDtoNullException;
+import ru.shorty.linkshortener.utils.UnsortedUtil;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.UUID;
 
@@ -14,36 +14,44 @@ import java.util.UUID;
 public class LinkDto {
 
     private UUID uid;
-
-    private String ref;
-
-    private String refRoute;
-
-    private String title;
-
+    private String ref = "";
+    private String title = "";
+    private String refRoute = "";
     private Date createDt;
-
     private Date expirationDt;
-
     private boolean active;
 
+    //region Getters / Setters
+
     public String getRefRoute() {
-        if (refRoute != null && !refRoute.trim().isEmpty())
-            return refRoute;
-        refRoute = RandomStringUtils.randomAlphanumeric(5);
+        if (refRoute.isEmpty())
+            refRoute = UnsortedUtil.getRandomString(5);
         return refRoute;
     }
 
+    public void setRefRoute(String refRoute) {
+        this.refRoute = refRoute.trim();
+    }
+
     public String getTitle() {
-        if (title != null && !title.trim().isEmpty())
+        if (!title.isEmpty())
             return title;
-        if (getRef() == null)
+
+        if (getRef().isEmpty())
             throw new LinkDtoNullException();
+
         try {
-            setTitle(Jsoup.connect(getRef()).get().title());
-        } catch (Exception exception) {
+            setTitle(UnsortedUtil.getTitleFromUrl(getRef()));
+        } catch (IOException exception) {
             throw new LinkDtoNullException();
         }
+
         return title;
     }
+
+    public void setTitle(String title) {
+        this.title = title.trim();
+    }
+
+    //endregion
 }

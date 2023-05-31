@@ -4,13 +4,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.shorty.linkshortener.dto.LinkDto;
-import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadyExistsException;
-import ru.shorty.linkshortener.models.LinkModel;
-import ru.shorty.linkshortener.exceptions.LinkDtoNullException;
-import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
 import ru.shorty.linkshortener.exceptions.LinkDoesNotExistsException;
+import ru.shorty.linkshortener.exceptions.LinkDtoNullException;
+import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadyExistsException;
+import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
+import ru.shorty.linkshortener.models.LinkModel;
 import ru.shorty.linkshortener.repositories.LinkRepository;
 
 import java.util.ArrayList;
@@ -65,7 +64,7 @@ public class LinkService {
     }
 
     public void createLink(LinkDto dto) {
-        if (dto.getRef() == null)
+        if (dto.getRef().isEmpty())
             throw new LinkDtoNullException();
         if (linkRepository.existsByTitle(dto.getTitle()))
             throw new LinkTitleAlreadyExistsException();
@@ -77,7 +76,7 @@ public class LinkService {
 
     public void updateLink(UUID link_uid, LinkDto dto) {
         LinkModel model = linkRepository.findByUid(link_uid).orElseThrow(LinkDoesNotExistsException::new);
-        if (dto.getRef() == null)
+        if (dto.getRef().isEmpty())
             throw new LinkDtoNullException();
         if (!Objects.equals(model.getTitle(), dto.getTitle())
                 && linkRepository.existsByTitle(dto.getTitle()))

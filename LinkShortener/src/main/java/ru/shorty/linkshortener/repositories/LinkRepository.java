@@ -8,16 +8,16 @@ import java.util.UUID;
 
 public interface LinkRepository extends JpaRepository<LinkModel, UUID> {
 
-    public Boolean existsByUid(UUID uuid);
+    Boolean existsByUid(UUID uuid);
 
-    public Boolean existsByTitle(String title);
+    Boolean existsByTitle(String title);
 
-    public Boolean existsByRefRoute(String refRoute);
+    Boolean existsByRefRoute(String refRoute);
 
-    public Optional<LinkModel> findByUid(UUID uuid);
+    Optional<LinkModel> findByUid(UUID uuid);
 
-    public Optional<LinkModel> findByRefRoute(String refRoute);
+    Optional<LinkModel> findByRefRoute(String refRoute);
 
-    public void deleteByUid(UUID uuid);
+    void deleteByUid(UUID uuid);
 
 }
