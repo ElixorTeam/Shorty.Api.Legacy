@@ -3,6 +3,8 @@ package ru.shorty.linkshortener.dto;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang.RandomStringUtils;
+import org.jsoup.Jsoup;
+import ru.shorty.linkshortener.exceptions.LinkDtoNullException;
 
 import java.util.Date;
 import java.util.UUID;
@@ -26,8 +28,22 @@ public class LinkDto {
     private boolean active;
 
     public String getRefRoute() {
-        if (refRoute != null && !refRoute.equals(""))
+        if (refRoute != null && !refRoute.trim().isEmpty())
             return refRoute;
-        return RandomStringUtils.randomAlphanumeric(5);
+        refRoute = RandomStringUtils.randomAlphanumeric(5);
+        return refRoute;
+    }
+
+    public String getTitle() {
+        if (title != null && !title.trim().isEmpty())
+            return title;
+        if (getRef() == null)
+            throw new LinkDtoNullException();
+        try {
+            setTitle(Jsoup.connect(getRef()).get().title());
+        } catch (Exception exception) {
+            throw new LinkDtoNullException();
+        }
+        return title;
     }
 }

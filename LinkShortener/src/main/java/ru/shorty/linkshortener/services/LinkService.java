@@ -65,7 +65,7 @@ public class LinkService {
     }
 
     public void createLink(LinkDto dto) {
-        if (dto.getRef() == null || dto.getTitle() == null)
+        if (dto.getRef() == null)
             throw new LinkDtoNullException();
         if (linkRepository.existsByTitle(dto.getTitle()))
             throw new LinkTitleAlreadyExistsException();
@@ -77,7 +77,7 @@ public class LinkService {
 
     public void updateLink(UUID link_uid, LinkDto dto) {
         LinkModel model = linkRepository.findByUid(link_uid).orElseThrow(LinkDoesNotExistsException::new);
-        if (dto.getRef() == null || dto.getTitle() == null)
+        if (dto.getRef() == null)
             throw new LinkDtoNullException();
         if (!Objects.equals(model.getTitle(), dto.getTitle())
                 && linkRepository.existsByTitle(dto.getTitle()))

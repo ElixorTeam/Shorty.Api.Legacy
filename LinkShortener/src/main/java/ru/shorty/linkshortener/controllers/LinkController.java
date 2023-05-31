@@ -1,7 +1,5 @@
 package ru.shorty.linkshortener.controllers;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +11,6 @@ import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadyExistsException;
 import ru.shorty.linkshortener.services.LinkService;
 import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
 
-import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -61,15 +58,6 @@ public class LinkController {
 
     @PostMapping("/")
     public ResponseEntity<?> createLink(@RequestBody LinkDto dto) {
-        if (dto.getTitle().length() == 0) {
-            String title;
-            try {
-                title = Jsoup.connect(dto.getRef()).get().title();
-            } catch (Exception e) {
-                title = "Test link";
-            }
-            dto.setTitle(title);
-        }
         linkService.createLink(dto);
         return new ResponseEntity<>(MsgUtil.success(), HttpStatus.OK);
     }
