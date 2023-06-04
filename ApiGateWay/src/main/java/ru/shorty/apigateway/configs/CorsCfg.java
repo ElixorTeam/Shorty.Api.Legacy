@@ -1,5 +1,6 @@
 package ru.shorty.apigateway.configs;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -10,6 +11,10 @@ import java.util.List;
 
 @Configuration
 public class CorsCfg {
+
+    @Value("${FRONT_URL:localhost}")
+    private String frontUrl;
+
     @Bean
     public CorsWebFilter corsFilter()
     {
@@ -17,12 +22,14 @@ public class CorsCfg {
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowedOrigins(List.of(
-                "http://localhost:3031",
-                "http://localhost:3000",
-                "http://en.localhost:3000",
-                "http://ru.localhost:3000"));
+                String.format("http://%s:3031", frontUrl),
+                String.format("http://%s:3000", frontUrl),
+                String.format("http://en.%s:3000", frontUrl),
+                String.format("http://ru.%s:3000", frontUrl)
+        ));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return new CorsWebFilter(source);
     }
+
 }

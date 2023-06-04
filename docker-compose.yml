@@ -1,9 +1,7 @@
-# Postgres docker-compose
-#https://hub.docker.com/_/postgres
 version: "3"
 services:
-  postgres-dev:
-    container_name: postgres-dev
+  postgres:
+    container_name: postgres
     image: postgres:alpine
     restart: unless-stopped
     ports:
@@ -42,5 +40,27 @@ services:
         limits:
           cpus: '1'
           memory: "1G"
+  eureka:
+    image: baggerfast/shorty_eureka_server:latest
+    container_name: "eureka"
+    depends_on:
+      postgres:
+        condition: service_started
+  link-shortener:
+    image: baggerfast/shorty_links_shortener:latest
+    container_name: "link-shortener"
+    depends_on:
+      eureka:
+        condition: service_started
+  api-gateway:
+    image: baggerfast/shorty_api_gateway:latest
+    container_name: "api-gateway"
+    ports:
+      - "8082:8082"
+    environment:
+      FRONT_URL: "BaggerPc"
+    depends_on:
+      link-shortener:
+        condition: service_started
 volumes:
   shorty_sql:
