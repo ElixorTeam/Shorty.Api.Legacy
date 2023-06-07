@@ -12,11 +12,11 @@ public interface LinkRepository extends JpaRepository<LinkModel, UUID> {
 
     Boolean existsByTitle(String title);
 
-    Boolean existsByRefRoute(String refRoute);
+    Boolean existsByInnerRef(String innerRef);
 
     Optional<LinkModel> findByUid(UUID uuid);
 
-    Optional<LinkModel> findByRefRoute(String refRoute);
+    Optional<LinkModel> findFirstByInnerRef(String innerRef);
 
     void deleteByUid(UUID uuid);
 

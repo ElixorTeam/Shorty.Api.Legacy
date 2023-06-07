@@ -1,9 +1,12 @@
 package ru.shorty.linkshortener.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.shorty.linkshortener.dto.LinkDto;
+import ru.shorty.linkshortener.dto.LinkCreateDto;
+import ru.shorty.linkshortener.dto.LinkUpdateDto;
 import ru.shorty.linkshortener.exceptions.LinkDoesNotExistsException;
 import ru.shorty.linkshortener.exceptions.LinkDtoNullException;
 import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadyExistsException;
@@ -13,6 +16,7 @@ import ru.shorty.linkshortener.utils.MsgUtil;
 
 import java.util.UUID;
 
+@Validated
 @RestController
 @RequestMapping("/api/links")
 public class LinkController {
@@ -29,19 +33,26 @@ public class LinkController {
 
     //region Rest methods
 
+    //region Path: /
+
     @GetMapping("/")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(linkService.getAllDtoCast(), HttpStatus.OK);
     }
 
+    @PostMapping("/")
+    public ResponseEntity<?> createLink(@Valid @RequestBody LinkCreateDto dto) {
+        linkService.createLink(dto);
+        return new ResponseEntity<>(MsgUtil.success(), HttpStatus.OK);
+    }
+
+    // endregion
+
+    //region Path: /link_uid
+
     @GetMapping("/{link_uid}")
     public ResponseEntity<?> getByUid(@PathVariable UUID link_uid) {
         return new ResponseEntity<>(linkService.getByUid(link_uid), HttpStatus.OK);
-    }
-
-    @GetMapping("/route_ref/{routeRef}")
-    public ResponseEntity<?> getByRef(@PathVariable String routeRef) {
-        return new ResponseEntity<>(linkService.getByRouteRef(routeRef), HttpStatus.OK);
     }
 
     @DeleteMapping("/{link_uid}")
@@ -51,15 +62,16 @@ public class LinkController {
     }
 
     @PutMapping("/{link_uid}")
-    public ResponseEntity<?> updateLink(@PathVariable UUID link_uid, @RequestBody LinkDto dto) {
+    public ResponseEntity<?> updateLink(@PathVariable UUID link_uid, @Valid @RequestBody LinkUpdateDto dto) {
         linkService.updateLink(link_uid, dto);
         return new ResponseEntity<>(MsgUtil.success(), HttpStatus.OK);
     }
 
-    @PostMapping("/")
-    public ResponseEntity<?> createLink(@RequestBody LinkDto dto) {
-        linkService.createLink(dto);
-        return new ResponseEntity<>(MsgUtil.success(), HttpStatus.OK);
+    //endregion
+
+    @GetMapping("/external_ref_by_inner/{innerRef}")
+    public ResponseEntity<?> getExternalRefByInner(@PathVariable String innerRef) {
+        return new ResponseEntity<>(linkService.getExternalRefByInner(innerRef), HttpStatus.OK);
     }
 
     //endregion

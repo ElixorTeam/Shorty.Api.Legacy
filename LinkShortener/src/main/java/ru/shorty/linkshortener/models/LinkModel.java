@@ -20,27 +20,23 @@ public class LinkModel {
     @Column(name = "UUID", unique = true)
     private UUID uid;
 
+    @NonNull
     @Column(name = "TITLE", unique = true, nullable = false)
     private String title;
 
     @NonNull
-    @Column(name = "REF", nullable = false)
-    private String ref;
+    @Column(name = "INNER_REF", unique = true, nullable = false)
+    private String innerRef;
 
     @NonNull
-    @Column(name = "REF_ROUTE", unique = true, nullable = false)
-    private String refRoute;
+    @Column(name = "EXTERNAL_REF", nullable = false)
+    private String externalRef;
 
-    @Column(name = "IS_ACTIVE")
-    private boolean active = true;
 
+    @NonNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "CREATE_DT", nullable = false)
     private Date createDt;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "EXPIRATION_DT")
-    private Date expirationDt;
 
     @PrePersist
     private void onCreate() {
