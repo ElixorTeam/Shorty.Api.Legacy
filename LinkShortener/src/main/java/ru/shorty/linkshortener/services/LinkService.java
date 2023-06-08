@@ -10,6 +10,7 @@ import ru.shorty.linkshortener.dto.LinkViewDto;
 import ru.shorty.linkshortener.exceptions.LinkDoesNotExistsException;
 import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadyExistsException;
 import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
+import ru.shorty.linkshortener.exceptions.ExternalRefDoesNotExistsException;
 import ru.shorty.linkshortener.models.LinkModel;
 import ru.shorty.linkshortener.repositories.LinkRepository;
 

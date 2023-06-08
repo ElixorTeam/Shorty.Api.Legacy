@@ -7,10 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.shorty.linkshortener.dto.LinkCreateDto;
 import ru.shorty.linkshortener.dto.LinkUpdateDto;
-import ru.shorty.linkshortener.exceptions.LinkDoesNotExistsException;
-import ru.shorty.linkshortener.exceptions.LinkDtoNullException;
-import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadyExistsException;
-import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
+import ru.shorty.linkshortener.exceptions.*;
 import ru.shorty.linkshortener.services.LinkService;
 import ru.shorty.linkshortener.utils.MsgUtil;
 
@@ -79,6 +76,16 @@ public class LinkController {
     //region Exceptions Handler
 
     @ExceptionHandler
+    public ResponseEntity<?> linkDoesNotExists(LinkDoesNotExistsException exception) {
+        return new ResponseEntity<>(MsgUtil.createError("errorLinkNotExists"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> externalRefDoesNotExists(ExternalRefDoesNotExistsException exception) {
+        return new ResponseEntity<>(MsgUtil.createError("errorExternaRefNotExists"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
     public ResponseEntity<?> linkDtoNull(LinkDtoNullException exception) {
         return new ResponseEntity<>(MsgUtil.createError("Link title or ref is null"), HttpStatus.BAD_REQUEST);
     }
@@ -91,11 +98,6 @@ public class LinkController {
     @ExceptionHandler
     public ResponseEntity<?> routeRefAlreadyExists(LinkRouteRefAlreadyExistsException exception) {
         return new ResponseEntity<>(MsgUtil.createError("link with this routeRef is already exists"), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> linkDoesNotExists(LinkDoesNotExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("LinkNotExists"), HttpStatus.BAD_REQUEST);
     }
 
     //endregion
