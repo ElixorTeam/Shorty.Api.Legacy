@@ -8,8 +8,7 @@ import ru.shorty.linkshortener.dto.LinkCreateDto;
 import ru.shorty.linkshortener.dto.LinkUpdateDto;
 import ru.shorty.linkshortener.dto.LinkViewDto;
 import ru.shorty.linkshortener.exceptions.LinkDoesNotExistsException;
-import ru.shorty.linkshortener.exceptions.LinkRouteRefAlreadyExistsException;
-import ru.shorty.linkshortener.exceptions.LinkTitleAlreadyExistsException;
+import ru.shorty.linkshortener.exceptions.InnerRefAlreadyExistsException;
 import ru.shorty.linkshortener.exceptions.ExternalRefDoesNotExistsException;
 import ru.shorty.linkshortener.models.LinkModel;
 import ru.shorty.linkshortener.repositories.LinkRepository;
@@ -63,18 +62,14 @@ public class LinkService {
     }
 
     public void createLink(LinkCreateDto dto) {
-        if (linkRepository.existsByTitle(dto.getTitle()))
-            throw new LinkRouteRefAlreadyExistsException();
         if (linkRepository.existsByInnerRef(dto.getInnerRef()))
-            throw new LinkRouteRefAlreadyExistsException();
+            throw new InnerRefAlreadyExistsException();
         LinkModel model = convertLinkCreateDtoToModel(dto);
         linkRepository.save(model);
     }
 
     public void updateLink(UUID link_uid, LinkUpdateDto dto) {
         LinkModel model = linkRepository.findByUid(link_uid).orElseThrow(LinkDoesNotExistsException::new);
-        if (linkRepository.existsByTitle(dto.getTitle()))
-            throw new LinkTitleAlreadyExistsException();
         model.setTitle(dto.getTitle());
         linkRepository.save(model);
     }

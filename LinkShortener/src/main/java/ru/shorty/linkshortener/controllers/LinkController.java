@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Validated
 @RestController
-@RequestMapping("/api/links")
+@RequestMapping("/api/v1/links/")
 public class LinkController {
 
     //region Properties && constructor
@@ -40,7 +40,7 @@ public class LinkController {
     @PostMapping("/")
     public ResponseEntity<?> createLink(@Valid @RequestBody LinkCreateDto dto) {
         linkService.createLink(dto);
-        return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.OK);
+        return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.CREATED);
     }
 
     // endregion
@@ -86,18 +86,18 @@ public class LinkController {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> linkDtoNull(LinkDtoNullException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("Link title or ref is null"), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> externalRefIsNotValid(ExternalRefIsNotValidException exception) {
+        return new ResponseEntity<>(MsgUtil.createError("errorExternalRefNotValid"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> LinkTitleAlreadyExists(LinkTitleAlreadyExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("Link with this title is already exists"), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> innerRefAlreadyExists(InnerRefAlreadyExistsException exception) {
+        return new ResponseEntity<>(MsgUtil.createError("errorInnerRefExists"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> routeRefAlreadyExists(LinkRouteRefAlreadyExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("link with this routeRef is already exists"), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> defaultTitleCanNotSet(DefaultTitleCanNotSetException exception) {
+        return new ResponseEntity<>(MsgUtil.createError("errorDefaultTitleNotSet"), HttpStatus.BAD_REQUEST);
     }
 
     //endregion

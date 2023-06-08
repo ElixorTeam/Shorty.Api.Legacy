@@ -21,7 +21,7 @@ public class LinkModel {
     private UUID uid;
 
     @NonNull
-    @Column(name = "TITLE", unique = true, nullable = false)
+    @Column(name = "TITLE", nullable = false)
     private String title;
 
     @NonNull
