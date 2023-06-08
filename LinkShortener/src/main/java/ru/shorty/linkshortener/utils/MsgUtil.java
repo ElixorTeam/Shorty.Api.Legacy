@@ -13,7 +13,7 @@ public class MsgUtil {
     }
 
     public static Map<String, String> getSuccess() {
-        return createSuccess("Success");
+        return createSuccess("success");
     }
 
 }

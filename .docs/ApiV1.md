@@ -129,7 +129,7 @@ or
 ##### Responses
 > | http code | response                    | description                         |
 > |-----------|-----------------------------|-------------------------------------|
-> | `201`     | {"msg": "Success" }         | success                             |
+> | `201`     | {"msg": "success" }         | success                             |
 > | `400`     | {"error": "Bad Request"}    | <b>innerRef</b>  is null or empty   |
 > | `400`     | {"error": "AutoTitleError"} | <b>title</b> can't set automaticaly |
 > | `400`     | {"error": "InnerRefExists"} | <b>innerRef</b> must be unique      |
@@ -161,7 +161,7 @@ or
 ##### Responses
 > | http code | response                   | description                          |
 > |-----------|----------------------------|--------------------------------------|
-> | `200`     | {"msg": "Success" }        | success                              |
+> | `200`     | {"msg": "success" }        | success                              |
 > | `400`     | {"error": "Bad Request"}   | title is null or empty               |
 > | `400`     | {"error": "LinkNotExists"} | link with <b>uuid</b> doesn't Exists |
 
@@ -184,7 +184,7 @@ or
 
 > | http code | response                   | description                          |
 > |-----------|----------------------------|--------------------------------------|
-> | `200`     | {"msg": "Success" }        | success                              |
+> | `200`     | {"msg": "success" }        | success                              |
 > | `400`     | {"error": "Bad Request"}   | <b>uuid</b> is not valid             |
 > | `400`     | {"error": "LinkNotExists"} | link with <b>uuid</b> doesn't Exists |
 

@@ -46,8 +46,8 @@ public class LinkService {
     }
 
     public LinkViewDto getByUid(UUID link_uid) {
-        LinkModel model = linkRepository.findByUid(link_uid).orElseThrow(LinkDoesNotExistsException::new);
-        return convertLinkModelToViewDto(model);
+        return linkRepository.findByUid(link_uid).map(this::convertLinkModelToViewDto)
+            .orElseThrow(LinkDoesNotExistsException::new);
     }
 
     public void deleteByUid(UUID link_uid) {
@@ -57,7 +57,7 @@ public class LinkService {
     }
 
     public Map<String, String> getExternalRefByInner(String innerRef) {
-        LinkModel model = linkRepository.findFirstByInnerRef(innerRef).orElseThrow(LinkDoesNotExistsException::new);
+        LinkModel model = linkRepository.findFirstByInnerRef(innerRef).orElseThrow(ExternalRefDoesNotExistsException::new);
         LinkViewDto dtoModel = convertLinkModelToViewDto(model);
         return Collections.singletonMap("externalRef", dtoModel.getExternalRef());
     }
