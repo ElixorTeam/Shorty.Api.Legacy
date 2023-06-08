@@ -4,12 +4,16 @@ import java.util.Map;
 
 public class MsgUtil {
 
-    public static Map<String, String> create(String message) {
+    public static Map<String, String> createSuccess(String message) {
         return Map.of("msg", message);
     }
 
-    public static Map<String, String> success() {
-        return create("Success");
+    public static Map<String, String> createError(String message) {
+        return Map.of("error", message);
+    }
+
+    public static Map<String, String> getSuccess() {
+        return createSuccess("Success");
     }
 
 }

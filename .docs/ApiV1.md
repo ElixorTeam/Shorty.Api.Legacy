@@ -59,11 +59,11 @@ or
 > | `uuid` |  required | UUID      | link identity |
 
 ##### Responses
-> | http code | response                    | description                           |
-> |-----------|-----------------------------|---------------------------------------|
-> | `200`     | json                        | success                               |
-> | `400`     | {"error": "Bad Request"}    | <b>uuid</b> is not valid              |
-> | `400`     | {"error": "LinkNotExsists"} | link with <b>uuid</b> doesn't exsists |
+> | http code | response                   | description                          |
+> |-----------|----------------------------|--------------------------------------|
+> | `200`     | json                       | success                              |
+> | `400`     | {"error": "Bad Request"}   | <b>uuid</b> is not valid             |
+> | `400`     | {"error": "LinkNotExists"} | link with <b>uuid</b> doesn't Exists |
 
 ##### Response 200
 ```json
@@ -91,11 +91,11 @@ or
 > | `innerRef` |  required | string    | inner url   |
 
 ##### Responses
-> | http code | response                          | description                                           |
-> |-----------|-----------------------------------|-------------------------------------------------------|
-> | `200`     | json                              | success                                               |
-> | `400`     | {"error": "Bad Request"}          | <b>innerRef</b> is not valid                          |
-> | `400`     | {"error": "ExternaRefNotExsists"} | <b>externalRef</b> by <b>innerRef</b> doesn't exsists |
+> | http code | response                         | description                                          |
+> |-----------|----------------------------------|------------------------------------------------------|
+> | `200`     | json                             | success                                              |
+> | `400`     | {"error": "Bad Request"}         | <b>innerRef</b> is not valid                         |
+> | `400`     | {"error": "ExternaRefNotExists"} | <b>externalRef</b> by <b>innerRef</b> doesn't Exists |
 
 ##### Response 200
 ```json
@@ -127,12 +127,12 @@ or
 }
 ```
 ##### Responses
-> | http code | response                     | description                         |
-> |-----------|------------------------------|-------------------------------------|
-> | `201`     | {"msg": "Success" }          | success                             |
-> | `400`     | {"error": "Bad Request"}     | <b>innerRef</b>  is null or empty   |
-> | `400`     | {"error": "AutoTitleError"}  | <b>title</b> can't set automaticaly |
-> | `400`     | {"error": "InnerRefExsists"} | <b>innerRef</b> must be unique      |
+> | http code | response                    | description                         |
+> |-----------|-----------------------------|-------------------------------------|
+> | `201`     | {"msg": "Success" }         | success                             |
+> | `400`     | {"error": "Bad Request"}    | <b>innerRef</b>  is null or empty   |
+> | `400`     | {"error": "AutoTitleError"} | <b>title</b> can't set automaticaly |
+> | `400`     | {"error": "InnerRefExists"} | <b>innerRef</b> must be unique      |
 
 </details>
 
@@ -159,11 +159,11 @@ or
 }
 ```
 ##### Responses
-> | http code | response                    | description                           |
-> |-----------|-----------------------------|---------------------------------------|
-> | `200`     | {"msg": "Success" }         | success                               |
-> | `400`     | {"error": "Bad Request"}    | title is null or empty                |
-> | `400`     | {"error": "LinkNotExsists"} | link with <b>uuid</b> doesn't exsists |
+> | http code | response                   | description                          |
+> |-----------|----------------------------|--------------------------------------|
+> | `200`     | {"msg": "Success" }        | success                              |
+> | `400`     | {"error": "Bad Request"}   | title is null or empty               |
+> | `400`     | {"error": "LinkNotExists"} | link with <b>uuid</b> doesn't Exists |
 
 </details>
 
@@ -182,10 +182,10 @@ or
 
 ##### Responses
 
-> | http code | response                    | description                           |
-> |-----------|-----------------------------|---------------------------------------|
-> | `200`     | {"msg": "Success" }         | success                               |
-> | `400`     | {"error": "Bad Request"}    | <b>uuid</b> is not valid              |
-> | `400`     | {"error": "LinkNotExsists"} | link with <b>uuid</b> doesn't exsists |
+> | http code | response                   | description                          |
+> |-----------|----------------------------|--------------------------------------|
+> | `200`     | {"msg": "Success" }        | success                              |
+> | `400`     | {"error": "Bad Request"}   | <b>uuid</b> is not valid             |
+> | `400`     | {"error": "LinkNotExists"} | link with <b>uuid</b> doesn't Exists |
 
 </details>

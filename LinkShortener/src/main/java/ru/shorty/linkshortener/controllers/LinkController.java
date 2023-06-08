@@ -43,7 +43,7 @@ public class LinkController {
     @PostMapping("/")
     public ResponseEntity<?> createLink(@Valid @RequestBody LinkCreateDto dto) {
         linkService.createLink(dto);
-        return new ResponseEntity<>(MsgUtil.success(), HttpStatus.OK);
+        return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.OK);
     }
 
     // endregion
@@ -58,13 +58,13 @@ public class LinkController {
     @DeleteMapping("/{link_uid}")
     public ResponseEntity<?> deleteByUid(@PathVariable UUID link_uid) {
         linkService.deleteByUid(link_uid);
-        return new ResponseEntity<>(MsgUtil.success(), HttpStatus.OK);
+        return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.OK);
     }
 
     @PutMapping("/{link_uid}")
     public ResponseEntity<?> updateLink(@PathVariable UUID link_uid, @Valid @RequestBody LinkUpdateDto dto) {
         linkService.updateLink(link_uid, dto);
-        return new ResponseEntity<>(MsgUtil.success(), HttpStatus.OK);
+        return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.OK);
     }
 
     //endregion
@@ -80,22 +80,22 @@ public class LinkController {
 
     @ExceptionHandler
     public ResponseEntity<?> linkDtoNull(LinkDtoNullException exception) {
-        return new ResponseEntity<>(MsgUtil.create("Link title or ref is null"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(MsgUtil.createError("Link title or ref is null"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> LinkTitleAlreadyExists(LinkTitleAlreadyExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.create("Link with this title is already exists"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(MsgUtil.createError("Link with this title is already exists"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> routeRefAlreadyExists(LinkRouteRefAlreadyExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.create("link with this routeRef is already exists"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(MsgUtil.createError("link with this routeRef is already exists"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity<?> linkDoesNotExists(LinkDoesNotExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.create("Link doesn't exists"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(MsgUtil.createError("LinkNotExists"), HttpStatus.BAD_REQUEST);
     }
 
     //endregion

@@ -38,11 +38,10 @@ public class LinkService {
         return linkRepository.findAll(Sort.by(Sort.Direction.DESC, "createDt"));
     }
 
-    public List<LinkViewDto> getAllDtoCast() {
-        List<LinkViewDto> dtos = new ArrayList<>();
-        for (LinkModel model : getAll())
-            dtos.add(convertLinkModelToViewDto(model));
-        return dtos;
+    public Map<String, List<LinkViewDto>>  getAllDtoCast() {
+        List<LinkViewDto> dtosList = getAll().stream()
+            .map(this::convertLinkModelToViewDto).toList();
+        return Collections.singletonMap("data", dtosList);
     }
 
     public LinkViewDto getByUid(UUID link_uid) {
