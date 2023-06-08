@@ -12,7 +12,7 @@
 <details>
 <summary>
     <code>GET</code>
-    <code><b>shorty/api/links</b></code>
+    <code><b>shorty/api/v1/links</b></code>
     <code>(all links)</code>
 </summary>
 
@@ -49,7 +49,7 @@ or
 <details>
 <summary>
     <code>GET</code>
-    <code><b>shorty/api/links/{uuid}</b></code>
+    <code><b>shorty/api/v1/links/{uuid}</b></code>
     <code>(link by uuid)</code>
 </summary>
 
@@ -59,11 +59,11 @@ or
 > | `uuid` |  required | UUID      | link identity |
 
 ##### Responses
-> | http code | response                   | description                          |
-> |-----------|----------------------------|--------------------------------------|
-> | `200`     | json                       | success                              |
-> | `400`     | {"error": "Bad Request"}   | <b>uuid</b> is not valid             |
-> | `400`     | {"error": "LinkNotExists"} | link with <b>uuid</b> doesn't Exists |
+> | http code | response                        | description                          |
+> |-----------|---------------------------------|--------------------------------------|
+> | `200`     | json                            | success                              |
+> | `400`     | {"error": "Bad Request"}        | <b>uuid</b> is not valid             |
+> | `400`     | {"error": "errorLinkNotExists"} | link with <b>uuid</b> doesn't Exists |
 
 ##### Response 200
 ```json
@@ -81,7 +81,7 @@ or
 <details>
 <summary>
   <code>GET</code>
-  <code><b>shorty/api/links/external_ref_by_inner/{innerRef}</b></code>
+  <code><b>shorty/api/v1/links/external_ref_by_inner/{innerRef}</b></code>
   <code>(redirect url by inner)</code>
 </summary>
 
@@ -91,11 +91,11 @@ or
 > | `innerRef` |  required | string    | inner url   |
 
 ##### Responses
-> | http code | response                         | description                                          |
-> |-----------|----------------------------------|------------------------------------------------------|
-> | `200`     | json                             | success                                              |
-> | `400`     | {"error": "Bad Request"}         | <b>innerRef</b> is not valid                         |
-> | `400`     | {"error": "ExternaRefNotExists"} | <b>externalRef</b> by <b>innerRef</b> doesn't Exists |
+> | http code | response                              | description                                          |
+> |-----------|---------------------------------------|------------------------------------------------------|
+> | `200`     | json                                  | success                                              |
+> | `400`     | {"error": "Bad Request"}              | <b>innerRef</b> is not valid                         |
+> | `400`     | {"error": "errorExternaRefNotExists"} | <b>externalRef</b> by <b>innerRef</b> doesn't Exists |
 
 ##### Response 200
 ```json
@@ -110,29 +110,32 @@ or
 <details>
 <summary>
   <code>POST</code>
-  <code><b>shorty/api/links/</b></code>
+  <code><b>shorty/api/v1/links/</b></code>
   <code>(create link)</code></summary>
 
 ##### Json Request Body
-> | name          | type     | data type | description                                                                            |
-> |---------------|----------|-----------|----------------------------------------------------------------------------------------|
-> | `title`       | optional | string    | if not set, title sets from header of externalRef                                      |
-> | `innerRef`    | optional | string    | - if not set, will be generated <br> - url name for our service (without full address) |
-> | `externalRef` | required | string    | url (htpps, full domain) adress for redirect page                                      |
+> | name          | type     | data type | description                                                                                                                     |
+> |---------------|----------|-----------|---------------------------------------------------------------------------------------------------------------------------------|
+> | `title`       | optional | string    | if not set, title sets from header of externalRef                                                                               |
+> | `innerRef`    | optional | string    | - max len: 10 <br> - default len: 5 <br> - if not set, will be generated <br> - url name for our service (without full address) |
+> | `externalRef` | required | string    | - max len: 100 <br>  - url (htpps, full domain) adress for redirect page                                                        |
 
 
 ```json
 {
-  "title": "new link title"
+  "title": "MyVk",
+  "innerRef": "vk123",
+  "externalRef": "https://vk.com"
 }
 ```
 ##### Responses
-> | http code | response                    | description                         |
-> |-----------|-----------------------------|-------------------------------------|
-> | `201`     | {"msg": "success" }         | success                             |
-> | `400`     | {"error": "Bad Request"}    | <b>innerRef</b>  is null or empty   |
-> | `400`     | {"error": "AutoTitleError"} | <b>title</b> can't set automaticaly |
-> | `400`     | {"error": "InnerRefExists"} | <b>innerRef</b> must be unique      |
+> | http code | response                              | description                       |
+> |-----------|---------------------------------------|-----------------------------------|
+> | `201`     | {"msg": "success" }                   | success                           |
+> | `400`     | {"error": "Bad Request"}              | <b>innerRef</b>  is null or empty |
+> | `400`     | {"error": "errorExternalRefNotValid"} | <b>externalRef</b> not valid      |
+> | `400`     | {"error": "errorDefaultTitleNotSet"}  | <b>title</b> can't set automatic  |
+> | `400`     | {"error": "errorInnerRefExists"}      | <b>innerRef</b> must be unique    |
 
 </details>
 
@@ -140,7 +143,7 @@ or
 <details>
 <summary>
   <code>PUT</code>
-  <code><b>shorty/api/links/{uuid}</b></code>
+  <code><b>shorty/api/v1/links/{uuid}</b></code>
   <code>(update link title by uuid)</code></summary>
 
 ##### Parameters
@@ -159,11 +162,11 @@ or
 }
 ```
 ##### Responses
-> | http code | response                   | description                          |
-> |-----------|----------------------------|--------------------------------------|
-> | `200`     | {"msg": "success" }        | success                              |
-> | `400`     | {"error": "Bad Request"}   | title is null or empty               |
-> | `400`     | {"error": "LinkNotExists"} | link with <b>uuid</b> doesn't Exists |
+> | http code | response                        | description                          |
+> |-----------|---------------------------------|--------------------------------------|
+> | `200`     | {"msg": "success" }             | success                              |
+> | `400`     | {"error": "Bad Request"}        | title is [null, empty, not valid]    |
+> | `400`     | {"error": "errorLinkNotExists"} | link with <b>uuid</b> doesn't Exists |
 
 </details>
 
@@ -171,7 +174,7 @@ or
 <details>
 <summary>
   <code>DELETE</code>
-  <code><b>shorty/api/links/{uuid}</b></code>
+  <code><b>shorty/api/v1/links/{uuid}</b></code>
   <code>(delete link by uuid)</code></summary>
 
 ##### Parameters
@@ -182,10 +185,10 @@ or
 
 ##### Responses
 
-> | http code | response                   | description                          |
-> |-----------|----------------------------|--------------------------------------|
-> | `200`     | {"msg": "success" }        | success                              |
-> | `400`     | {"error": "Bad Request"}   | <b>uuid</b> is not valid             |
-> | `400`     | {"error": "LinkNotExists"} | link with <b>uuid</b> doesn't Exists |
+> | http code | response                        | description                          |
+> |-----------|---------------------------------|--------------------------------------|
+> | `200`     | {"msg": "success" }             | success                              |
+> | `400`     | {"error": "Bad Request"}        | <b>uuid</b> is not valid             |
+> | `400`     | {"error": "errorLinkNotExists"} | link with <b>uuid</b> doesn't Exists |
 
 </details>
