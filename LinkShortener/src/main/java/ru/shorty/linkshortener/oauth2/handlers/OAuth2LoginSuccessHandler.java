@@ -1,4 +1,4 @@
-package ru.shorty.linkshortener.oauth2;
+package ru.shorty.linkshortener.oauth2.handlers;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

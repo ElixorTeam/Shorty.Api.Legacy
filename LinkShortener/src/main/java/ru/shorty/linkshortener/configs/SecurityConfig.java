@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.shorty.linkshortener.oauth2.CustomOAuth2UserService;
-import ru.shorty.linkshortener.oauth2.OAuth2LoginSuccessHandler;
+import ru.shorty.linkshortener.oauth2.handlers.OAuth2LoginSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
