@@ -4,10 +4,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.shorty.linkshortener.oauth2.CustomOAuth2UserService;
 import ru.shorty.linkshortener.oauth2.handlers.OAuth2LoginFailureHandler;
 import ru.shorty.linkshortener.oauth2.handlers.OAuth2LoginSuccessHandler;
+import ru.shorty.linkshortener.oauth2.token.TokenAuthFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,31 +22,38 @@ public class SecurityConfig {
 
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
 
-    public SecurityConfig(CustomOAuth2UserService oauth2UserService, OAuth2LoginSuccessHandler oauth2LoginSuccessHandler, OAuth2LoginFailureHandler oAuth2LoginFailureHandler) {
+    private final TokenAuthFilter tokenAuthFilter;
+
+    public SecurityConfig(CustomOAuth2UserService oauth2UserService, OAuth2LoginSuccessHandler oauth2LoginSuccessHandler, OAuth2LoginFailureHandler oAuth2LoginFailureHandler, TokenAuthFilter tokenAuthFilter) {
         this.oauth2UserService = oauth2UserService;
         this.oauth2LoginSuccessHandler = oauth2LoginSuccessHandler;
         this.oAuth2LoginFailureHandler = oAuth2LoginFailureHandler;
+        this.tokenAuthFilter = tokenAuthFilter;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf().disable()
+            .sessionManagement().
+            sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
             .authorizeHttpRequests()
-                .requestMatchers("/api/**").authenticated()
-                .anyRequest().permitAll()
+            .requestMatchers("/api/**").authenticated()
+            .anyRequest().permitAll()
             .and()
             .oauth2Login()
-                .redirectionEndpoint()
-                    .baseUri("/oauth2/callback/*")
-                    .and()
-                .userInfoEndpoint()
-                .userService(oauth2UserService)
+            .redirectionEndpoint()
+            .baseUri("/oauth2/callback/*")
+            .and()
+            .userInfoEndpoint()
+            .userService(oauth2UserService)
             .and()
             .successHandler(oauth2LoginSuccessHandler)
             .failureHandler(oAuth2LoginFailureHandler)
             .and()
             .logout().permitAll();
+        http.addFilterBefore(tokenAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
