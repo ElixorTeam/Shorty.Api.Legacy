@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.shorty.linkshortener.oauth2.CustomOAuth2UserService;
+import ru.shorty.linkshortener.oauth2.handlers.OAuth2LoginFailureHandler;
 import ru.shorty.linkshortener.oauth2.handlers.OAuth2LoginSuccessHandler;
 
 @Configuration
@@ -16,9 +17,12 @@ public class SecurityConfig {
 
     private final OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
 
-    public SecurityConfig(CustomOAuth2UserService oauth2UserService, OAuth2LoginSuccessHandler oauth2LoginSuccessHandler) {
+    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+
+    public SecurityConfig(CustomOAuth2UserService oauth2UserService, OAuth2LoginSuccessHandler oauth2LoginSuccessHandler, OAuth2LoginFailureHandler oAuth2LoginFailureHandler) {
         this.oauth2UserService = oauth2UserService;
         this.oauth2LoginSuccessHandler = oauth2LoginSuccessHandler;
+        this.oAuth2LoginFailureHandler = oAuth2LoginFailureHandler;
     }
 
     @Bean
@@ -37,6 +41,7 @@ public class SecurityConfig {
                 .userService(oauth2UserService)
             .and()
             .successHandler(oauth2LoginSuccessHandler)
+            .failureHandler(oAuth2LoginFailureHandler)
             .and()
             .logout().permitAll();
         return http.build();
