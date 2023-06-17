@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Validated
 @RestController
-@RequestMapping("/api/v1/links/")
+@RequestMapping("/api/v1/links")
 public class LinkController {
 
     //region Properties && constructor
@@ -32,12 +32,12 @@ public class LinkController {
 
     //region Path: /
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<?> getAll() {
         return new ResponseEntity<>(linkService.getAllDtoCast(), HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> createLink(@Valid @RequestBody LinkCreateDto dto) {
         linkService.createLink(dto);
         return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.CREATED);
