@@ -10,8 +10,6 @@ public interface LinkRepository extends JpaRepository<LinkModel, UUID> {
 
     Boolean existsByUid(UUID uuid);
 
-    Boolean existsByTitle(String title);
-
     Boolean existsByInnerRef(String innerRef);
 
     Optional<LinkModel> findByUid(UUID uuid);

@@ -8,6 +8,8 @@ import ru.shorty.linkshortener.models.UserModel;
 import ru.shorty.linkshortener.oauth2.UserPrincipal;
 import ru.shorty.linkshortener.repositories.UserRepository;
 
+import java.util.UUID;
+
 
 @Service
 public class CustomUserDetailsService {
@@ -26,9 +28,9 @@ public class CustomUserDetailsService {
     }
 
     @Transactional
-    public UserPrincipal loadUserById(Long id) {
-        UserModel user = userRepository.findById(id).orElseThrow(() ->
-            new ResourceNotFoundException("User", "id", id)
+    public UserPrincipal loadUserByUid(UUID uid) {
+        UserModel user = userRepository.findByUid(uid).orElseThrow(() ->
+            new ResourceNotFoundException("User", "id", uid)
         );
         return UserPrincipal.create(user);
     }

@@ -14,6 +14,7 @@ import ru.shorty.linkshortener.properties.AppProperties;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
 
 
 @Service
@@ -35,16 +36,16 @@ public class TokenProvider {
         Date currentDate = Date.from(Instant.now());
 
         return JWT.create()
-            .withSubject(Long.toString(userPrincipal.getId()))
+            .withSubject(String.valueOf(userPrincipal.getUid()))
             .withIssuedAt(currentDate)
             .withExpiresAt(getExpiryDate())
             .sign(Algorithm.HMAC512(jwtKey));
     }
 
-    public Long getUserIdFromToken(String jwtToken) {
+    public UUID getUserIdFromToken(String jwtToken) {
         try {
             DecodedJWT decodedJWT = JWT.decode(jwtToken);
-            return Long.parseLong(decodedJWT.getSubject());
+            return UUID.fromString(decodedJWT.getSubject());
         } catch (JWTDecodeException e) {
             logger.error("Invalid JWT token: {}", jwtToken, e);
             return null;

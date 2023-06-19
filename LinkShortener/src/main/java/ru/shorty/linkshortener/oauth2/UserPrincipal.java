@@ -8,23 +8,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import ru.shorty.linkshortener.models.UserModel;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Setter
 public class UserPrincipal implements OAuth2User, UserDetails {
 
-    private Long id;
+    private UUID uid;
     private String name;
     private String email;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(Long id, String name, String email, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
+    public UserPrincipal(UUID uid, String name, String email, Collection<? extends GrantedAuthority> authorities) {
+        this.uid = uid;
         this.name = name;
         this.email = email;
         this.authorities = authorities;
@@ -32,7 +29,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     public static UserPrincipal create(UserModel user) {
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-        return new UserPrincipal(user.getId(), user.getName(), user.getEmail(), authorities);
+        return new UserPrincipal(user.getUid(), user.getName(), user.getEmail(), authorities);
     }
 
     public static UserPrincipal create(UserModel user, Map<String, Object> attributes) {

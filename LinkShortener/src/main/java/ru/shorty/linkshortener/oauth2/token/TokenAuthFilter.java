@@ -17,6 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import ru.shorty.linkshortener.details.CustomUserDetailsService;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Service
 public class TokenAuthFilter extends OncePerRequestFilter {
@@ -44,8 +45,8 @@ public class TokenAuthFilter extends OncePerRequestFilter {
             String jwt = getJwtFromRequest(request);
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                Long userId = tokenProvider.getUserIdFromToken(jwt);
-                UserDetails userDetails = customUserDetailsService.loadUserById(userId);
+                UUID userId = tokenProvider.getUserIdFromToken(jwt);
+                UserDetails userDetails = customUserDetailsService.loadUserByUid(userId);
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()
