@@ -51,6 +51,7 @@ public class SecurityConfig {
             .and()
             .authorizeHttpRequests()
             .requestMatchers("/api/**").authenticated()
+            .requestMatchers("**/external_ref_by_inner/**").permitAll()
             .anyRequest().permitAll()
             .and()
             .oauth2Login()
