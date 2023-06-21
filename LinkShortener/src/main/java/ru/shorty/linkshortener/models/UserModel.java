@@ -16,7 +16,9 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "USERS", uniqueConstraints = {@UniqueConstraint(columnNames = "EMAIL")})
+@Table(name = "USERS", uniqueConstraints = {
+    @UniqueConstraint(name = "UQ_USER_PROVIDERS", columnNames = {"PROVIDER", "PROVIDER_ID"})
+})
 public class UserModel {
 
     @Id
@@ -29,8 +31,7 @@ public class UserModel {
     private String name;
 
     @Email
-    @NotNull
-    @Column(name = "EMAIL", nullable = false, length = 50)
+    @Column(name = "EMAIL", length = 50)
     private String email;
 
     @NotNull

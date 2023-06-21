@@ -45,7 +45,7 @@ public class CustomUserDetails implements OAuth2User, UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return String.valueOf(uid);
     }
 
     @Override

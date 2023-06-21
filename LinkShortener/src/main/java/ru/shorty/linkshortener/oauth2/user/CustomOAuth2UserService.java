@@ -1,13 +1,11 @@
 package ru.shorty.linkshortener.oauth2.user;
 
-import io.micrometer.common.util.StringUtils;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import ru.shorty.linkshortener.exceptions.OAuth2AuthenticationProcessingException;
 import ru.shorty.linkshortener.models.UserModel;
 import ru.shorty.linkshortener.oauth2.providers.common.AuthProvider;
 import ru.shorty.linkshortener.oauth2.providers.common.OAuth2ProviderFactory;
@@ -42,10 +40,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String providerName = oAuth2UserRequest.getClientRegistration().getRegistrationId();
         OAuth2UserProvider oAuth2UserInfo = OAuth2ProviderFactory.getOAuth2User(providerName, oAuth2User.getAttributes());
 
-        UserModel user = getUserByEmail(oAuth2UserInfo).map(existingUser -> {
-                validateUserProvider(existingUser, oAuth2UserRequest.getClientRegistration().getRegistrationId());
-                return updateExistingUser(existingUser, oAuth2UserInfo);
-            })
+        UserModel user = getUserIfExists(oAuth2UserRequest, oAuth2UserInfo)
+            .map(existingUser -> updateExistingUser(existingUser, oAuth2UserInfo))
             .orElseGet(() -> registerNewUser(oAuth2UserRequest, oAuth2UserInfo));
 
         return CustomUserDetails.create(user, oAuth2User.getAttributes());
@@ -60,24 +56,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         return userRepository.save(user);
     }
 
-    private Optional<UserModel> getUserByEmail(OAuth2UserProvider oAuth2UserInfo) {
-        String email = oAuth2UserInfo.getEmail();
-        if (StringUtils.isEmpty(email)) {
-            throw new OAuth2AuthenticationProcessingException("Email not found from OAuth2 provider");
-        }
-        return userRepository.findByEmail(email);
+    private Optional<UserModel> getUserIfExists(OAuth2UserRequest oAuth2UserRequest, OAuth2UserProvider oAuth2User) {
+        AuthProvider provider = AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId());
+        return userRepository.findByProviderIdAndProvider(oAuth2User.getId(), provider);
     }
 
     private UserModel updateExistingUser(UserModel existingUser, OAuth2UserProvider oAuth2UserInfo) {
         existingUser.setName(oAuth2UserInfo.getName());
         return userRepository.save(existingUser);
-    }
-
-    private void validateUserProvider(UserModel user, String providerName) {
-        if (!user.getProvider().equals(AuthProvider.valueOf(providerName))) {
-            String msg = String.format("Looks like you're signed up with %s account. Please use your %s account to login.",
-                user.getProvider(), user.getProvider());
-            throw new OAuth2AuthenticationProcessingException(msg);
-        }
     }
 }
