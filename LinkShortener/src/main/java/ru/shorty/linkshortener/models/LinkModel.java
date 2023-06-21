@@ -12,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "LINKS", schema = "dbo")
+@Table(name = "LINKS")
 public class LinkModel {
 
     @Id

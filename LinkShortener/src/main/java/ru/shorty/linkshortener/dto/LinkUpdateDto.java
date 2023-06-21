@@ -1,11 +1,9 @@
 package ru.shorty.linkshortener.dto;
 
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class LinkUpdateDto {
 
     @NotNull

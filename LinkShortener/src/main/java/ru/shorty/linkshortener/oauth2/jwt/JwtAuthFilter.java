@@ -1,4 +1,4 @@
-package ru.shorty.linkshortener.oauth2.token;
+package ru.shorty.linkshortener.oauth2.jwt;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -14,40 +14,32 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.shorty.linkshortener.details.CustomUserDetailsService;
+import ru.shorty.linkshortener.oauth2.user.CustomUserDetailsService;
 
 import java.io.IOException;
 import java.util.UUID;
 
 @Service
-public class TokenAuthFilter extends OncePerRequestFilter {
+public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(TokenAuthFilter.class);
-    private final TokenProvider tokenProvider;
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
+    private final JwtGenerator tokenGenerator;
     private final CustomUserDetailsService customUserDetailsService;
 
-    public TokenAuthFilter(TokenProvider tokenProvider, CustomUserDetailsService customUserDetailsService) {
-        this.tokenProvider = tokenProvider;
+    public JwtAuthFilter(JwtGenerator tokenGenerator, CustomUserDetailsService customUserDetailsService) {
+        this.tokenGenerator = tokenGenerator;
         this.customUserDetailsService = customUserDetailsService;
-    }
-
-    private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
-            return bearerToken.substring(7);
-        return "";
     }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
         try {
-            String jwt = getJwtFromRequest(request);
+            String token = getJwtFromRequest(request);
 
-            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
-                UUID userId = tokenProvider.getUserIdFromToken(jwt);
+            if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
+                UUID userId = tokenGenerator.getUserIdFromToken(token);
                 UserDetails userDetails = customUserDetailsService.loadUserByUid(userId);
-
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()
                 );
@@ -61,5 +53,12 @@ public class TokenAuthFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer "))
+            return bearerToken.substring(7);
+        return null;
     }
 }

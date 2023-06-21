@@ -1,4 +1,4 @@
-package ru.shorty.linkshortener.oauth2;
+package ru.shorty.linkshortener.oauth2.user;
 
 import io.micrometer.common.util.StringUtils;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -48,7 +48,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             })
             .orElseGet(() -> registerNewUser(oAuth2UserRequest, oAuth2UserInfo));
 
-        return UserPrincipal.create(user, oAuth2User.getAttributes());
+        return CustomUserDetails.create(user, oAuth2User.getAttributes());
     }
 
     private UserModel registerNewUser(OAuth2UserRequest oAuth2UserRequest, OAuth2UserProvider oAuth2UserInfo) {

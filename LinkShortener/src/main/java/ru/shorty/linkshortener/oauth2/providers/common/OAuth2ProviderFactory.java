@@ -13,7 +13,6 @@ public class OAuth2ProviderFactory {
         } else if (registrationId.equalsIgnoreCase(AuthProvider.github.toString())) {
             return new GithubOAuth2User(attributes);
         } else {
-            // TODO: throw exception normal
             throw new Exception("Sorry! Login with " + registrationId + " is not supported yet.");
         }
     }

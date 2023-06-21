@@ -1,4 +1,4 @@
-package ru.shorty.linkshortener.oauth2;
+package ru.shorty.linkshortener.oauth2.user;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +12,7 @@ import java.util.*;
 
 @Getter
 @Setter
-public class UserPrincipal implements OAuth2User, UserDetails {
+public class CustomUserDetails implements OAuth2User, UserDetails {
 
     private UUID uid;
     private String name;
@@ -20,22 +20,22 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(UUID uid, String name, String email, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(UUID uid, String name, String email, Collection<? extends GrantedAuthority> authorities) {
         this.uid = uid;
         this.name = name;
         this.email = email;
         this.authorities = authorities;
     }
 
-    public static UserPrincipal create(UserModel user) {
+    public static CustomUserDetails create(UserModel user) {
         List<GrantedAuthority> authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-        return new UserPrincipal(user.getUid(), user.getName(), user.getEmail(), authorities);
+        return new CustomUserDetails(user.getUid(), user.getName(), user.getEmail(), authorities);
     }
 
-    public static UserPrincipal create(UserModel user, Map<String, Object> attributes) {
-        UserPrincipal userPrincipal = create(user);
-        userPrincipal.setAttributes(attributes);
-        return userPrincipal;
+    public static CustomUserDetails create(UserModel user, Map<String, Object> attributes) {
+        CustomUserDetails customUserDetails = create(user);
+        customUserDetails.setAttributes(attributes);
+        return customUserDetails;
     }
 
     @Override

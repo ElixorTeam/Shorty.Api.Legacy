@@ -2,14 +2,12 @@ package ru.shorty.linkshortener.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 import ru.shorty.linkshortener.exceptions.DefaultTitleCanNotSetException;
 import ru.shorty.linkshortener.exceptions.ExternalRefIsNotValidException;
 import ru.shorty.linkshortener.utils.UnsortedUtil;
 
-@Getter
-@Setter
+@Data
 public class LinkCreateDto {
 
     private String title = "";

@@ -16,7 +16,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "USERS", schema = "dbo", uniqueConstraints = {@UniqueConstraint(columnNames = "EMAIL")})
+@Table(name = "USERS", uniqueConstraints = {@UniqueConstraint(columnNames = "EMAIL")})
 public class UserModel {
 
     @Id

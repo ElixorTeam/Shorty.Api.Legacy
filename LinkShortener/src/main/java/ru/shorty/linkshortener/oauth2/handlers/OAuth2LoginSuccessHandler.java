@@ -7,7 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
-import ru.shorty.linkshortener.oauth2.token.TokenProvider;
+import ru.shorty.linkshortener.dto.AuthDto;
+import ru.shorty.linkshortener.oauth2.jwt.JwtGenerator;
 import ru.shorty.linkshortener.properties.AppProperties;
 
 import java.io.IOException;
@@ -15,13 +16,13 @@ import java.io.IOException;
 @Component
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private final TokenProvider tokenProvider;
+    private final JwtGenerator tokenGenerator;
 
     private final AppProperties appProperties;
 
-    public OAuth2LoginSuccessHandler(AppProperties appProperties, TokenProvider tokenProvider) {
+    public OAuth2LoginSuccessHandler(AppProperties appProperties, JwtGenerator tokenGenerator) {
         this.appProperties = appProperties;
-        this.tokenProvider = tokenProvider;
+        this.tokenGenerator = tokenGenerator;
     }
 
     @Override
@@ -39,8 +40,9 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String redirectUri = appProperties.getOauth2().getAuthorizedRedirectUrl();
-        String token = tokenProvider.createToken(authentication);
-        logger.debug(token);
-        return UriComponentsBuilder.fromUriString(redirectUri).queryParam("token", token).build().toUriString();
+        AuthDto token = tokenGenerator.generateTokenDto(authentication);
+        logger.debug(token.getAccessToken());
+        return UriComponentsBuilder.fromUriString(redirectUri).queryParam("jwt", token.getAccessToken()).
+            build().toUriString();
     }
 }
