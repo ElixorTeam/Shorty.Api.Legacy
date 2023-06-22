@@ -32,7 +32,7 @@ public class JwtGenerator {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         Date currentDate = Date.from(Instant.now());
         Date expireDate = getExpiryDate();
-        String jwtSecret = appProperties.getOauth2().getJwtTokenSecret();
+        String jwtSecret = appProperties.getJwtTokenSecret();
         return new AuthDto(
             JWT.create()
                 .withSubject(String.valueOf(customUserDetails.getUid()))
@@ -44,7 +44,7 @@ public class JwtGenerator {
 
     private Date getExpiryDate() {
         Instant nowInstant = Instant.now();
-        Instant expiryInstant = nowInstant.plusMillis(appProperties.getOauth2().getTokenExpirationMillis());
+        Instant expiryInstant = nowInstant.plusMillis(appProperties.getTokenExpirationMillis());
         return Date.from(expiryInstant);
     }
 
@@ -60,7 +60,7 @@ public class JwtGenerator {
 
     public boolean validateToken(String authToken) {
         try {
-            String jwtSecret = appProperties.getOauth2().getJwtTokenSecret();
+            String jwtSecret = appProperties.getJwtTokenSecret();
             JWT.require(Algorithm.HMAC512(jwtSecret)).build().verify(authToken);
             return true;
         } catch (JWTVerificationException ex) {

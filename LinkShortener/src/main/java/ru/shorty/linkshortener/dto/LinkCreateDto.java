@@ -15,7 +15,7 @@ public class LinkCreateDto {
     @Size(max = 10)
     private String innerRef = "";
 
-    @Size(max = 100)
+    @Size(max = 250)
     @NotBlank
     private String externalRef = "";
 

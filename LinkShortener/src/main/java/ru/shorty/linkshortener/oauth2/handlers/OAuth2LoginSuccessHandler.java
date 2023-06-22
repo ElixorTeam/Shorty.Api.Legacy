@@ -39,7 +39,7 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String redirectUri = appProperties.getOauth2().getAuthorizedRedirectUrl();
+        String redirectUri = appProperties.getAuthorizedRedirectUrl();
         AuthDto token = tokenGenerator.generateTokenDto(authentication);
         logger.debug(token.getAccessToken());
         return UriComponentsBuilder.fromUriString(redirectUri).queryParam("jwt", token.getAccessToken()).
