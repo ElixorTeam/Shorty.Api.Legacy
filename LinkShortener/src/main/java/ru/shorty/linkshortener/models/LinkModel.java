@@ -21,15 +21,15 @@ public class LinkModel {
     private UUID uid;
 
     @NonNull
-    @Column(name = "TITLE", nullable = false, length = 100)
+    @Column(name = "TITLE", nullable = false, length = 64)
     private String title;
 
     @NonNull
-    @Column(name = "INNER_REF", unique = true, nullable = false, length = 100)
+    @Column(name = "INNER_REF", unique = true, nullable = false, length = 10)
     private String innerRef;
 
     @NonNull
-    @Column(name = "EXTERNAL_REF", nullable = false, length = 100)
+    @Column(name = "EXTERNAL_REF", nullable = false, length = 250)
     private String externalRef;
 
     @NonNull
