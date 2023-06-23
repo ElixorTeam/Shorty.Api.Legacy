@@ -1,7 +1,6 @@
 package ru.shorty.linkshortener.services;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.shorty.linkshortener.dto.LinkCreateDto;
@@ -11,7 +10,9 @@ import ru.shorty.linkshortener.exceptions.LinkDoesNotExistsException;
 import ru.shorty.linkshortener.exceptions.InnerRefAlreadyExistsException;
 import ru.shorty.linkshortener.exceptions.ExternalRefDoesNotExistsException;
 import ru.shorty.linkshortener.models.LinkModel;
+import ru.shorty.linkshortener.models.UserModel;
 import ru.shorty.linkshortener.repositories.LinkRepository;
+import ru.shorty.linkshortener.repositories.UserRepository;
 
 import java.util.*;
 
@@ -25,34 +26,33 @@ public class LinkService {
 
     private final LinkRepository linkRepository;
 
-    public LinkService(LinkRepository linkRepository, ModelMapper modelMapper) {
+    private final UserRepository userRepository;
+
+    public LinkService(LinkRepository linkRepository, UserRepository userRepository, ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
         this.linkRepository = linkRepository;
+        this.userRepository = userRepository;
     }
 
     //endregion
 
     //region Rest methods
 
-    private List<LinkModel> getAll() {
-        return linkRepository.findAll(Sort.by(Sort.Direction.DESC, "createDt"));
-    }
-
-    public Map<String, List<LinkViewDto>>  getAllDtoCast() {
-        List<LinkViewDto> dtosList = getAll().stream()
+    public Map<String, List<LinkViewDto>>  getAllDtoCast(UUID userUid) {
+        List<LinkViewDto> dtosList = linkRepository.findAllByUserUidOrderByCreateDtDesc(userUid).stream()
             .map(this::convertLinkModelToViewDto).toList();
         return Collections.singletonMap("data", dtosList);
     }
 
-    public LinkViewDto getByUid(UUID link_uid) {
-        return linkRepository.findByUid(link_uid).map(this::convertLinkModelToViewDto)
+    public LinkViewDto getByUid(UUID userUid, UUID linkUid) {
+        return linkRepository.findByUidAndUserUid(linkUid, userUid).map(this::convertLinkModelToViewDto)
             .orElseThrow(LinkDoesNotExistsException::new);
     }
 
-    public void deleteByUid(UUID link_uid) {
-        if (!linkRepository.existsByUid(link_uid))
+    public void deleteByUid(UUID userUid, UUID linkUid) {
+        if (!linkRepository.existsByUidAndUserUid(linkUid, userUid))
             throw new LinkDoesNotExistsException();
-        linkRepository.deleteByUid(link_uid);
+        linkRepository.deleteByUidAndUserUid(linkUid, userUid);
     }
 
     public Map<String, String> getExternalRefByInner(String innerRef) {
@@ -61,15 +61,20 @@ public class LinkService {
         return Collections.singletonMap("externalRef", dtoModel.getExternalRef());
     }
 
-    public void createLink(LinkCreateDto dto) {
+    public void createLink(UUID userUid, LinkCreateDto dto) {
         if (linkRepository.existsByInnerRef(dto.getInnerRef()))
             throw new InnerRefAlreadyExistsException();
+
         LinkModel model = convertLinkCreateDtoToModel(dto);
+
+        Optional<UserModel> userOptional = userRepository.findByUid(userUid);
+        UserModel user = userOptional.orElseThrow(() -> new RuntimeException("User not found"));
+        model.setUser(user);
         linkRepository.save(model);
     }
 
-    public void updateLink(UUID link_uid, LinkUpdateDto dto) {
-        LinkModel model = linkRepository.findByUid(link_uid).orElseThrow(LinkDoesNotExistsException::new);
+    public void updateLink(UUID userUid, UUID linkUid, LinkUpdateDto dto) {
+        LinkModel model = linkRepository.findByUidAndUserUid(userUid, linkUid).orElseThrow(LinkDoesNotExistsException::new);
         model.setTitle(dto.getTitle());
         linkRepository.save(model);
     }

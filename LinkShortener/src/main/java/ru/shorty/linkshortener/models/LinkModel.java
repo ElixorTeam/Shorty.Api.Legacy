@@ -20,6 +20,10 @@ public class LinkModel {
     @Column(name = "UUID", unique = true)
     private UUID uid;
 
+    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @JoinColumn(name = "USER_UID", nullable = false)
+    private UserModel user;
+
     @NonNull
     @Column(name = "TITLE", nullable = false, length = 64)
     private String title;
