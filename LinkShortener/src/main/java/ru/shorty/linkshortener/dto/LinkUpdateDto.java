@@ -10,7 +10,8 @@ public class LinkUpdateDto {
     private String title;
 
     public void setTitle(String title) {
-        this.title = title.trim();
+        title = title.trim();
+        this.title = title.substring(0, Math.min(title.length(), 64));
     }
 
 }
