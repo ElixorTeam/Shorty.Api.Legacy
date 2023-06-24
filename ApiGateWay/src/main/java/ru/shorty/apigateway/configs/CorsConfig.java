@@ -8,11 +8,11 @@ import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 @Configuration
-public class CorsCfg {
+public class CorsConfig {
 
     private final Environment environment;
 
-    public CorsCfg(Environment environment) {
+    public CorsConfig(Environment environment) {
         this.environment = environment;
     }
 

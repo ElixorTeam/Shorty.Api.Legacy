@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.shorty.linkshortener.dto.LinkCreateDto;
 import ru.shorty.linkshortener.dto.LinkUpdateDto;
 import ru.shorty.linkshortener.exceptions.*;
+import ru.shorty.linkshortener.oauth2.user.UserResolver;
 import ru.shorty.linkshortener.services.LinkService;
 import ru.shorty.linkshortener.utils.MsgUtil;
 
@@ -20,10 +21,13 @@ public class LinkController {
 
     //region Properties && constructor
 
+    private final UserResolver userResolver;
+
     private final LinkService linkService;
 
-    public LinkController(LinkService linkService) {
+    public LinkController(LinkService linkService, UserResolver userResolver) {
         this.linkService = linkService;
+        this.userResolver = userResolver;
     }
 
     //endregion
@@ -34,33 +38,33 @@ public class LinkController {
 
     @GetMapping("")
     public ResponseEntity<?> getAll() {
-        return new ResponseEntity<>(linkService.getAllDtoCast(), HttpStatus.OK);
+        return new ResponseEntity<>(linkService.getAllDtoCast(userResolver.getIdCurrentUser()), HttpStatus.OK);
     }
 
     @PostMapping("")
     public ResponseEntity<?> createLink(@Valid @RequestBody LinkCreateDto dto) {
-        linkService.createLink(dto);
+        linkService.createLink(userResolver.getIdCurrentUser(), dto);
         return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.CREATED);
     }
 
     // endregion
 
-    //region Path: /link_uid
+    //region Path: /linkUid
 
-    @GetMapping("/{link_uid}")
-    public ResponseEntity<?> getByUid(@PathVariable UUID link_uid) {
-        return new ResponseEntity<>(linkService.getByUid(link_uid), HttpStatus.OK);
+    @GetMapping("/{linkUid}")
+    public ResponseEntity<?> getByUid(@PathVariable UUID linkUid) {
+        return new ResponseEntity<>(linkService.getByUid(userResolver.getIdCurrentUser(), linkUid), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{link_uid}")
-    public ResponseEntity<?> deleteByUid(@PathVariable UUID link_uid) {
-        linkService.deleteByUid(link_uid);
+    @DeleteMapping("/{linkUid}")
+    public ResponseEntity<?> deleteByUid(@PathVariable UUID linkUid) {
+        linkService.deleteByUid(userResolver.getIdCurrentUser(), linkUid);
         return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.OK);
     }
 
-    @PutMapping("/{link_uid}")
-    public ResponseEntity<?> updateLink(@PathVariable UUID link_uid, @Valid @RequestBody LinkUpdateDto dto) {
-        linkService.updateLink(link_uid, dto);
+    @PutMapping("/{linkUid}")
+    public ResponseEntity<?> updateLink(@PathVariable UUID linkUid, @Valid @RequestBody LinkUpdateDto dto) {
+        linkService.updateLink(userResolver.getIdCurrentUser(), linkUid, dto);
         return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.OK);
     }
 

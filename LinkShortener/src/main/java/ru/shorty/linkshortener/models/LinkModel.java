@@ -1,10 +1,10 @@
 package ru.shorty.linkshortener.models;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import org.hibernate.annotations.UuidGenerator;
-import jakarta.persistence.*;
 
 import java.util.Date;
 import java.util.UUID;
@@ -20,18 +20,21 @@ public class LinkModel {
     @Column(name = "UUID", unique = true)
     private UUID uid;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "USER_UID", nullable = false)
+    private UserModel user;
+
     @NonNull
-    @Column(name = "TITLE", nullable = false)
+    @Column(name = "TITLE", nullable = false, length = 64)
     private String title;
 
     @NonNull
-    @Column(name = "INNER_REF", unique = true, nullable = false)
+    @Column(name = "INNER_REF", unique = true, nullable = false, length = 10)
     private String innerRef;
 
     @NonNull
-    @Column(name = "EXTERNAL_REF", nullable = false)
+    @Column(name = "EXTERNAL_REF", nullable = false, length = 250)
     private String externalRef;
-
 
     @NonNull
     @Temporal(TemporalType.TIMESTAMP)
