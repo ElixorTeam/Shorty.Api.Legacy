@@ -74,7 +74,7 @@ public class LinkService {
     }
 
     public void updateLink(UUID userUid, UUID linkUid, LinkUpdateDto dto) {
-        LinkModel model = linkRepository.findByUidAndUserUid(userUid, linkUid).orElseThrow(LinkDoesNotExistsException::new);
+        LinkModel model = linkRepository.findByUidAndUserUid(linkUid, userUid).orElseThrow(LinkDoesNotExistsException::new);
         model.setTitle(dto.getTitle());
         linkRepository.save(model);
     }
