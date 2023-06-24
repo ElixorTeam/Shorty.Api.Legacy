@@ -40,11 +40,10 @@ public class LinkCreateDto {
 
         try {
             setTitle(UnsortedUtil.getTitleFromUrl(getExternalRef()));
-            return title;
         } catch (Exception exception) {
-            throw new DefaultTitleCanNotSetException();
+           setTitle(getInnerRef());
         }
-
+        return title;
     }
 
     public void setTitle(String title) {
