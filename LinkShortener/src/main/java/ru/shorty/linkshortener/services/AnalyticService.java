@@ -45,22 +45,29 @@ public class AnalyticService {
         return Collections.singletonMap("externalRef", linkModel.getExternalRef());
     }
 
-    public Map<String, Map<String, Long>> getGroupByAnalytics(UUID linkUid) {
+    public Map<String, Map<String, Long>> getBaseAnalytics(UUID linkUid) {
         LinkModel linkModel = linkRepository.findById(linkUid).orElseThrow(ExternalRefDoesNotExistsException::new);
         Map<String, Map<String, Long>> jsonMap = new HashMap<>();
         Map<String, Long> osType = getGroupJson(
-            redirectRepository.getGroupByOsType(linkModel.getUid())
+            redirectRepository.getGroupByOsType(linkUid)
         );
         Map<String, Long> deviceType = getGroupJson(
-            redirectRepository.getGroupByDeviceType(linkModel.getUid())
+            redirectRepository.getGroupByDeviceType(linkUid)
         );
         Map<String, Long> browserType = getGroupJson(
-            redirectRepository.getGroupByBrowserType(linkModel.getUid())
+            redirectRepository.getGroupByBrowserType(linkUid)
         );
+
+        Map<String, Long> views = new HashMap<>();
+        views.put("total", redirectRepository.countByLinkUid(linkUid));
+        views.put("unique", redirectRepository.countUnique(linkUid));
+        views.put("avg_day", Math.round(redirectRepository.countAvgPerDay(linkUid)));
+
 
         jsonMap.put("os", osType);
         jsonMap.put("devices", deviceType);
         jsonMap.put("browsers", browserType);
+        jsonMap.put("views", views);
         return jsonMap;
     }
 

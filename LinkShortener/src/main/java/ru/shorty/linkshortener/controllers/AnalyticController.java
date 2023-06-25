@@ -28,9 +28,9 @@ public class AnalyticController {
         return new ResponseEntity<>(redirectService.getExternalRefByInner(innerRef, userAgent, header), HttpStatus.OK);
     }
 
-    @GetMapping("/group_by_analytic/{linkUid}")
-    public ResponseEntity<?> getGroupByAnalytics(@PathVariable UUID linkUid) {
-        return new ResponseEntity<>(redirectService.getGroupByAnalytics(linkUid), HttpStatus.OK);
+    @GetMapping("/{linkUid}")
+    public ResponseEntity<?> getBaseAnalytics(@PathVariable UUID linkUid) {
+        return new ResponseEntity<>(redirectService.getBaseAnalytics(linkUid), HttpStatus.OK);
     }
 
     @ExceptionHandler

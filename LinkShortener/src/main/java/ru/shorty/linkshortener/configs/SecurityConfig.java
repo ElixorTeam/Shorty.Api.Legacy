@@ -51,6 +51,7 @@ public class SecurityConfig {
             .and()
             .authorizeHttpRequests()
             .requestMatchers("/api/v1/links/**").authenticated()
+            .requestMatchers("/api/v1/auth/status").authenticated()
             .anyRequest().permitAll()
             .and()
             .oauth2Login()
