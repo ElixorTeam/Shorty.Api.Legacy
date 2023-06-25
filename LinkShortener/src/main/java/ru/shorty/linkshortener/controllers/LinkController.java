@@ -1,34 +1,31 @@
 package ru.shorty.linkshortener.controllers;
 
-import jakarta.validation.Valid;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.shorty.linkshortener.dto.LinkCreateDto;
-import ru.shorty.linkshortener.dto.LinkUpdateDto;
+import ru.shorty.linkshortener.dto.objects.LinkDto;
+import ru.shorty.linkshortener.dto.rules.ValidationRules;
 import ru.shorty.linkshortener.exceptions.*;
 import ru.shorty.linkshortener.oauth2.user.UserResolver;
 import ru.shorty.linkshortener.services.LinkService;
 import ru.shorty.linkshortener.utils.MsgUtil;
-
 import java.util.UUID;
 
-@Validated
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
 @RequestMapping("/api/v1/links")
 public class LinkController {
 
-    //region Properties && constructor
+    //region Properties
 
-    private final UserResolver userResolver;
+    UserResolver userResolver;
 
-    private final LinkService linkService;
-
-    public LinkController(LinkService linkService, UserResolver userResolver) {
-        this.linkService = linkService;
-        this.userResolver = userResolver;
-    }
+    LinkService linkService;
 
     //endregion
 
@@ -36,14 +33,14 @@ public class LinkController {
 
     //region Path: /
 
-    @GetMapping("")
+    @GetMapping("/")
     public ResponseEntity<?> getAll() {
         UUID userUid = userResolver.getIdCurrentUser();
         return new ResponseEntity<>(linkService.getAllDtoCast(userUid), HttpStatus.OK);
     }
 
-    @PostMapping("")
-    public ResponseEntity<?> createLink(@Valid @RequestBody LinkCreateDto dto) {
+    @PostMapping("/")
+    public ResponseEntity<?> createLink(@Validated(ValidationRules.Create.class) @RequestBody LinkDto dto) {
         UUID userUid = userResolver.getIdCurrentUser();
         linkService.createLink(userUid, dto);
         return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.CREATED);
@@ -51,7 +48,7 @@ public class LinkController {
 
     // endregion
 
-    //region Path: /linkUid
+    // region Path: /linkUid
 
     @GetMapping("/{linkUid}")
     public ResponseEntity<?> getByUid(@PathVariable UUID linkUid) {
@@ -67,7 +64,7 @@ public class LinkController {
     }
 
     @PutMapping("/{linkUid}")
-    public ResponseEntity<?> updateLink(@PathVariable UUID linkUid, @Valid @RequestBody LinkUpdateDto dto) {
+    public ResponseEntity<?> updateLink(@PathVariable UUID linkUid, @Validated(ValidationRules.Update.class) @RequestBody LinkDto dto) {
         UUID userUid = userResolver.getIdCurrentUser();
         linkService.updateLink(userUid, linkUid, dto);
         return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.OK);

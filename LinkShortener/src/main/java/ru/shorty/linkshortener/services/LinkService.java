@@ -1,11 +1,12 @@
 package ru.shorty.linkshortener.services;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.shorty.linkshortener.dto.LinkCreateDto;
-import ru.shorty.linkshortener.dto.LinkUpdateDto;
-import ru.shorty.linkshortener.dto.LinkViewDto;
+import ru.shorty.linkshortener.dto.objects.LinkDto;
 import ru.shorty.linkshortener.exceptions.LinkDoesNotExistsException;
 import ru.shorty.linkshortener.exceptions.InnerRefAlreadyExistsException;
 import ru.shorty.linkshortener.models.LinkModel;
@@ -15,35 +16,32 @@ import ru.shorty.linkshortener.repositories.UserRepository;
 
 import java.util.*;
 
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class LinkService {
 
     //region Properties && constructor
 
-    private final ModelMapper modelMapper;
+    ModelMapper modelMapper;
 
-    private final LinkRepository linkRepository;
+    LinkRepository linkRepository;
 
-    private final UserRepository userRepository;
+    UserRepository userRepository;
 
-    public LinkService(LinkRepository linkRepository, UserRepository userRepository, ModelMapper modelMapper) {
-        this.modelMapper = modelMapper;
-        this.linkRepository = linkRepository;
-        this.userRepository = userRepository;
-    }
 
     //endregion
 
     //region Rest methods
 
-    public Map<String, List<LinkViewDto>>  getAllDtoCast(UUID userUid) {
-        List<LinkViewDto> dtosList = linkRepository.findAllByUserUidOrderByCreateDtDesc(userUid).stream()
+    public Map<String, List<LinkDto>>  getAllDtoCast(UUID userUid) {
+        List<LinkDto> dtosList = linkRepository.findAllByUserUidOrderByCreateDtDesc(userUid).stream()
             .map(this::convertLinkModelToViewDto).toList();
         return Collections.singletonMap("data", dtosList);
     }
 
-    public LinkViewDto getByUid(UUID userUid, UUID linkUid) {
+    public LinkDto getByUid(UUID userUid, UUID linkUid) {
         return linkRepository.findByUidAndUserUid(linkUid, userUid).map(this::convertLinkModelToViewDto)
             .orElseThrow(LinkDoesNotExistsException::new);
     }
@@ -54,7 +52,7 @@ public class LinkService {
         linkRepository.deleteByUidAndUserUid(linkUid, userUid);
     }
 
-    public void createLink(UUID userUid, LinkCreateDto dto) {
+    public void createLink(UUID userUid, LinkDto dto) {
         if (linkRepository.existsByInnerRef(dto.getInnerRef()))
             throw new InnerRefAlreadyExistsException();
 
@@ -67,7 +65,7 @@ public class LinkService {
         linkRepository.save(model);
     }
 
-    public void updateLink(UUID userUid, UUID linkUid, LinkUpdateDto dto) {
+    public void updateLink(UUID userUid, UUID linkUid, LinkDto dto) {
         LinkModel model = linkRepository.findByUidAndUserUid(linkUid, userUid).orElseThrow(LinkDoesNotExistsException::new);
         model.setTitle(dto.getTitle());
         linkRepository.save(model);
@@ -77,12 +75,12 @@ public class LinkService {
 
     //region Other
 
-    public LinkModel convertLinkCreateDtoToModel(LinkCreateDto dto) {
+    public LinkModel convertLinkCreateDtoToModel(LinkDto dto) {
         return modelMapper.map(dto, LinkModel.class);
     }
 
-    public LinkViewDto convertLinkModelToViewDto(LinkModel model) {
-        return modelMapper.map(model, LinkViewDto.class);
+    public LinkDto convertLinkModelToViewDto(LinkModel model) {
+        return modelMapper.map(model, LinkDto.class);
     }
 
     //endregion

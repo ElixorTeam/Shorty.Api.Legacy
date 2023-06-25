@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
-import ru.shorty.linkshortener.dto.AuthDto;
+import ru.shorty.linkshortener.dto.objects.AuthDto;
 import ru.shorty.linkshortener.oauth2.jwt.JwtGenerator;
 import ru.shorty.linkshortener.properties.AppProperties;
 

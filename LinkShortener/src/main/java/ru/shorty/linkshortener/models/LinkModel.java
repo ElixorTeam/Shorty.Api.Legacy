@@ -1,22 +1,22 @@
 package ru.shorty.linkshortener.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Date;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "LINKS")
 public class LinkModel {
 
     @Id
-    @UuidGenerator()
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "UUID", unique = true)
     private UUID uid;
 
@@ -24,26 +24,17 @@ public class LinkModel {
     @JoinColumn(name = "USER_UID", nullable = false)
     private UserModel user;
 
-    @NonNull
     @Column(name = "TITLE", nullable = false, length = 64)
     private String title;
 
-    @NonNull
     @Column(name = "INNER_REF", unique = true, nullable = false, length = 10)
     private String innerRef;
 
-    @NonNull
     @Column(name = "EXTERNAL_REF", nullable = false, length = 250)
     private String externalRef;
 
-    @NonNull
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     @Column(name = "CREATE_DT", nullable = false)
     private Date createDt;
-
-    @PrePersist
-    private void onCreate() {
-        createDt = new Date();
-    }
 
 }
