@@ -3,7 +3,6 @@ package ru.shorty.linkshortener.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import ru.shorty.linkshortener.exceptions.DefaultTitleCanNotSetException;
 import ru.shorty.linkshortener.exceptions.ExternalRefIsNotValidException;
 import ru.shorty.linkshortener.utils.UnsortedUtil;
 

@@ -38,12 +38,14 @@ public class LinkController {
 
     @GetMapping("")
     public ResponseEntity<?> getAll() {
-        return new ResponseEntity<>(linkService.getAllDtoCast(userResolver.getIdCurrentUser()), HttpStatus.OK);
+        UUID userUid = userResolver.getIdCurrentUser();
+        return new ResponseEntity<>(linkService.getAllDtoCast(userUid), HttpStatus.OK);
     }
 
     @PostMapping("")
     public ResponseEntity<?> createLink(@Valid @RequestBody LinkCreateDto dto) {
-        linkService.createLink(userResolver.getIdCurrentUser(), dto);
+        UUID userUid = userResolver.getIdCurrentUser();
+        linkService.createLink(userUid, dto);
         return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.CREATED);
     }
 
@@ -53,18 +55,21 @@ public class LinkController {
 
     @GetMapping("/{linkUid}")
     public ResponseEntity<?> getByUid(@PathVariable UUID linkUid) {
-        return new ResponseEntity<>(linkService.getByUid(userResolver.getIdCurrentUser(), linkUid), HttpStatus.OK);
+        UUID userUid = userResolver.getIdCurrentUser();
+        return new ResponseEntity<>(linkService.getByUid(userUid, linkUid), HttpStatus.OK);
     }
 
     @DeleteMapping("/{linkUid}")
     public ResponseEntity<?> deleteByUid(@PathVariable UUID linkUid) {
-        linkService.deleteByUid(userResolver.getIdCurrentUser(), linkUid);
+        UUID userUid = userResolver.getIdCurrentUser();
+        linkService.deleteByUid(userUid, linkUid);
         return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.OK);
     }
 
     @PutMapping("/{linkUid}")
     public ResponseEntity<?> updateLink(@PathVariable UUID linkUid, @Valid @RequestBody LinkUpdateDto dto) {
-        linkService.updateLink(userResolver.getIdCurrentUser(), linkUid, dto);
+        UUID userUid = userResolver.getIdCurrentUser();
+        linkService.updateLink(userUid, linkUid, dto);
         return new ResponseEntity<>(MsgUtil.getSuccess(), HttpStatus.OK);
     }
 
@@ -86,7 +91,7 @@ public class LinkController {
 
     @ExceptionHandler
     public ResponseEntity<?> externalRefDoesNotExists(ExternalRefDoesNotExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("errorExternaRefNotExists"), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(MsgUtil.createError("errorExternalRefNotExists"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
@@ -100,8 +105,8 @@ public class LinkController {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> defaultTitleCanNotSet(DefaultTitleCanNotSetException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("errorDefaultTitleNotSet"), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> titleIsNullOrEmpty(TitleIsNullException exception) {
+        return new ResponseEntity<>(MsgUtil.createError("titleIsNullOrEmpty"), HttpStatus.BAD_REQUEST);
     }
 
     //endregion
