@@ -5,17 +5,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.shorty.linkshortener.exceptions.ExternalRefDoesNotExistsException;
-import ru.shorty.linkshortener.services.RedirectService;
+import ru.shorty.linkshortener.services.AnalyticService;
 import ru.shorty.linkshortener.utils.MsgUtil;
+
+import java.util.UUID;
 
 
 @RestController
 @RequestMapping("/api/v1/links_analytics")
-public class RedirectController {
+public class AnalyticController {
 
-    private final RedirectService redirectService;
+    private final AnalyticService redirectService;
 
-    public RedirectController(RedirectService redirectService) {
+    public AnalyticController(AnalyticService redirectService) {
         this.redirectService = redirectService;
     }
 
@@ -24,6 +26,11 @@ public class RedirectController {
         String header = request.getHeader("CLIENT_UID");
         String userAgent = request.getHeader("User-Agent");
         return new ResponseEntity<>(redirectService.getExternalRefByInner(innerRef, userAgent, header), HttpStatus.OK);
+    }
+
+    @GetMapping("/group_by_analytic/{linkUid}")
+    public ResponseEntity<?> getGroupByAnalytics(@PathVariable UUID linkUid) {
+        return new ResponseEntity<>(redirectService.getGroupByAnalytics(linkUid), HttpStatus.OK);
     }
 
     @ExceptionHandler

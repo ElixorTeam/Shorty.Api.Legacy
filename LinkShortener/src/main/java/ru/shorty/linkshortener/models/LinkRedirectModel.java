@@ -12,9 +12,7 @@ import java.util.UUID;
 @Setter
 @Getter
 @Entity
-@Table(name = "LINKS_REDIRECT", uniqueConstraints = {
-    @UniqueConstraint(name = "UQ_LINKS_REDIRECT_CLIENT_INNER", columnNames = {"LINK_UID", "CLIENT_UID"})
-})
+@Table(name = "LINKS_REDIRECT")
 public class LinkRedirectModel {
 
     @Id

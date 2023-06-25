@@ -18,10 +18,13 @@ public class UnsortedUtil {
     }
 
     public static UUID getUidFromStringOrEmpty(String uuid) {
+        UUID uidEmpty = UUID.fromString("00000000-0000-0000-0000-000000000000");
+        if (uuid == null)
+            return uidEmpty;
         try {
             return UUID.fromString(uuid);
         } catch (IllegalArgumentException e) {
-            return UUID.fromString("00000000-0000-0000-0000-000000000000");
+            return uidEmpty;
         }
 
     }
