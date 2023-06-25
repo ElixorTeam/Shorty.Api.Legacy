@@ -38,7 +38,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User) throws Exception {
         String providerName = oAuth2UserRequest.getClientRegistration().getRegistrationId();
-        OAuth2UserProvider oAuth2UserInfo = OAuth2ProviderFactory.getOAuth2User(providerName, oAuth2User.getAttributes());
+        OAuth2UserProvider oAuth2UserInfo = OAuth2ProviderFactory.getOAuth2User(
+            providerName,
+            oAuth2User.getAttributes()
+        );
 
         UserModel user = getUserIfExists(oAuth2UserRequest, oAuth2UserInfo)
             .map(existingUser -> updateExistingUser(existingUser, oAuth2UserInfo))

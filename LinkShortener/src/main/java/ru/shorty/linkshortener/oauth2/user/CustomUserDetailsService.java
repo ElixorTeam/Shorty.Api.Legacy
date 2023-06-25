@@ -19,8 +19,7 @@ public class CustomUserDetailsService {
 
     public CustomUserDetails loadUserByUid(UUID uid) {
         UserModel user = userRepository.findByUid(uid).orElseThrow(() ->
-            new ResourceNotFoundException("User", "id", uid)
-        );
+            new ResourceNotFoundException("User", "id", uid));
         return CustomUserDetails.create(user);
     }
 }
