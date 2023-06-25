@@ -8,7 +8,6 @@ import ru.shorty.linkshortener.dto.LinkUpdateDto;
 import ru.shorty.linkshortener.dto.LinkViewDto;
 import ru.shorty.linkshortener.exceptions.LinkDoesNotExistsException;
 import ru.shorty.linkshortener.exceptions.InnerRefAlreadyExistsException;
-import ru.shorty.linkshortener.exceptions.ExternalRefDoesNotExistsException;
 import ru.shorty.linkshortener.models.LinkModel;
 import ru.shorty.linkshortener.models.UserModel;
 import ru.shorty.linkshortener.repositories.LinkRepository;
@@ -55,21 +54,16 @@ public class LinkService {
         linkRepository.deleteByUidAndUserUid(linkUid, userUid);
     }
 
-    public Map<String, String> getExternalRefByInner(String innerRef) {
-        LinkModel model = linkRepository.findFirstByInnerRef(innerRef).orElseThrow(ExternalRefDoesNotExistsException::new);
-        LinkViewDto dtoModel = convertLinkModelToViewDto(model);
-        return Collections.singletonMap("externalRef", dtoModel.getExternalRef());
-    }
-
     public void createLink(UUID userUid, LinkCreateDto dto) {
         if (linkRepository.existsByInnerRef(dto.getInnerRef()))
             throw new InnerRefAlreadyExistsException();
 
-        LinkModel model = convertLinkCreateDtoToModel(dto);
-
         Optional<UserModel> userOptional = userRepository.findByUid(userUid);
         UserModel user = userOptional.orElseThrow(() -> new RuntimeException("User not found"));
+
+        LinkModel model = convertLinkCreateDtoToModel(dto);
         model.setUser(user);
+
         linkRepository.save(model);
     }
 

@@ -9,8 +9,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
 
-    private String authorizedRedirectUrl;
+    private String FrontUrl;
+    private String FrontRedirectUrl;
+
     private String jwtTokenSecret;
+    private String authorizedRedirectUrl;
     private long tokenExpirationMillis;
 
 }
