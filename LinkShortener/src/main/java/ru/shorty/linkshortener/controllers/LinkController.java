@@ -75,23 +75,11 @@ public class LinkController {
 
     //endregion
 
-    @GetMapping("/external_ref_by_inner/{innerRef}")
-    public ResponseEntity<?> getExternalRefByInner(@PathVariable String innerRef) {
-        return new ResponseEntity<>(linkService.getExternalRefByInner(innerRef), HttpStatus.OK);
-    }
-
-    //endregion
-
     //region Exceptions Handler
 
     @ExceptionHandler
     public ResponseEntity<?> linkDoesNotExists(LinkDoesNotExistsException exception) {
         return new ResponseEntity<>(MsgUtil.createError("errorLinkNotExists"), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> externalRefDoesNotExists(ExternalRefDoesNotExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("errorExternalRefNotExists"), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler

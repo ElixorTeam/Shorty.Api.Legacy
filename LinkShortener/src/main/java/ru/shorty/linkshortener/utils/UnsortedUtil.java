@@ -4,6 +4,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.util.UUID;
 
 
 public class UnsortedUtil {
@@ -14,6 +15,15 @@ public class UnsortedUtil {
 
     public static String getTitleFromUrl(String url) throws IOException {
         return Jsoup.connect(url).get().title();
+    }
+
+    public static UUID getUidFromStringOrEmpty(String uuid) {
+        try {
+            return UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            return UUID.fromString("00000000-0000-0000-0000-000000000000");
+        }
+
     }
 
 }
