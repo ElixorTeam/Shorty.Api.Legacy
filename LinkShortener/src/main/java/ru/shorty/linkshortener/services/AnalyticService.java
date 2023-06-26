@@ -45,37 +45,38 @@ public class AnalyticService {
         return Collections.singletonMap("externalRef", linkModel.getExternalRef());
     }
 
-    public Map<String, Map<String, Long>> getBaseAnalytics(UUID linkUid) {
-        LinkModel linkModel = linkRepository.findById(linkUid).orElseThrow(ExternalRefDoesNotExistsException::new);
-        Map<String, Map<String, Long>> jsonMap = new HashMap<>();
-        Map<String, Long> osType = getGroupJson(
-            redirectRepository.getGroupByOsType(linkUid)
-        );
-        Map<String, Long> deviceType = getGroupJson(
-            redirectRepository.getGroupByDeviceType(linkUid)
-        );
-        Map<String, Long> browserType = getGroupJson(
-            redirectRepository.getGroupByBrowserType(linkUid)
-        );
+    public Map<String, List<Map<String, Long>>> getBaseAnalytics(UUID linkUid) {
+        LinkModel link = linkRepository.findById(linkUid).orElseThrow(ExternalRefDoesNotExistsException::new);
 
-        Map<String, Long> views = new HashMap<>();
-        views.put("total", redirectRepository.countByLinkUid(linkUid));
-        views.put("unique", redirectRepository.countUnique(linkUid));
-        views.put("avg_day", Math.round(redirectRepository.countAvgPerDay(linkUid)));
-
+        Map<String, List<Map<String, Long>>> jsonMap = new HashMap<>();
+        List<Map<String, Long>> osType = getGroupJson(redirectRepository.getGroupByOsType(linkUid));
+        List<Map<String, Long>> deviceType = getGroupJson(redirectRepository.getGroupByDeviceType(linkUid));
+        List<Map<String, Long>> browserType = getGroupJson(redirectRepository.getGroupByBrowserType(linkUid));
 
         jsonMap.put("os", osType);
         jsonMap.put("devices", deviceType);
         jsonMap.put("browsers", browserType);
-        jsonMap.put("views", views);
+        jsonMap.put("views", createViewsMap(linkUid));
+
         return jsonMap;
     }
 
-    private Map<String, Long> getGroupJson(List<Object[]> groups) {
-        Map<String, Long> readyGroups = new HashMap<>();
-        for (Object[] group : groups)
-            readyGroups.put((String) group[0], (Long) group[1]);
-        return readyGroups;
+    private List<Map<String, Long>> createViewsMap(UUID linkUid) {
+        return List.of(
+            Map.of("total", redirectRepository.countByLinkUid(linkUid)),
+            Map.of("unique", redirectRepository.countUnique(linkUid)),
+            Map.of("avg_day", Math.round(redirectRepository.countAvgPerDay(linkUid)))
+        );
+    }
+
+    private List<Map<String, Long>> getGroupJson(List<Object[]> groups) {
+        List<Map<String, Long>> data = new ArrayList<>();
+        for (Object[] group : groups) {
+            Map<String, Long> readyGroup = new HashMap<>();
+            readyGroup.put((String) group[0], (Long) group[1]);
+            data.add(readyGroup);
+        }
+        return data;
     }
 
 }
