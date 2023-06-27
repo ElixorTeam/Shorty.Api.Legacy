@@ -1,5 +1,8 @@
 package ru.shorty.linkshortener.oauth2.user;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import ru.shorty.linkshortener.exceptions.common.ResourceNotFoundException;
 import ru.shorty.linkshortener.models.UserModel;
@@ -9,13 +12,12 @@ import java.util.UUID;
 
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class CustomUserDetailsService {
 
-    final UserRepository userRepository;
+    UserRepository userRepository;
 
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     public CustomUserDetails loadUserByUid(UUID uid) {
         UserModel user = userRepository.findByUid(uid).orElseThrow(() ->

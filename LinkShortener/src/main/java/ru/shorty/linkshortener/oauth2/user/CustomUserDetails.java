@@ -1,7 +1,10 @@
 package ru.shorty.linkshortener.oauth2.user;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,13 +15,14 @@ import java.util.*;
 
 @Getter
 @Setter
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomUserDetails implements OAuth2User, UserDetails {
 
-    private UUID uid;
-    private String name;
-    private String email;
-    private Collection<? extends GrantedAuthority> authorities;
-    private Map<String, Object> attributes;
+    UUID uid;
+    String name;
+    String email;
+    Collection<? extends GrantedAuthority> authorities;
+    Map<String, Object> attributes;
 
     public CustomUserDetails(UUID uid, String name, String email, Collection<? extends GrantedAuthority> authorities) {
         this.uid = uid;

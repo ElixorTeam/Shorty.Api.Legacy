@@ -1,52 +1,43 @@
 package ru.shorty.linkshortener.models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Date;
 import java.util.UUID;
 
-@Setter
-@Getter
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "LINKS_REDIRECT")
 public class LinkRedirectModel {
 
     @Id
-    @UuidGenerator()
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "UUID", unique = true)
-    private UUID uid;
+    UUID uid;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "LINK_UID", nullable = false)
-    private LinkModel link;
+    LinkModel link;
 
-    @NonNull
     @Column(name = "CLIENT_UID", nullable = false)
-    private UUID clientUid;
+    UUID clientUid;
 
-    @NonNull
     @Column(name = "OS_TYPE", nullable = false, length = 25)
-    private String osType;
+    String osType;
 
-    @NonNull
     @Column(name = "DEVICE_TYPE", nullable = false, length = 25)
-    private String deviceType;
+    String deviceType;
 
-    @NonNull
     @Column(name = "BROWSER_TYPE", nullable = false, length = 25)
-    private String browserType;
+    String browserType;
 
-    @NonNull
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     @Column(name = "CREATE_DT", nullable = false)
-    private Date createDt;
+    Date createDt;
 
-    @PrePersist
-    private void onCreate() {
-        createDt = new Date();
-    }
 }

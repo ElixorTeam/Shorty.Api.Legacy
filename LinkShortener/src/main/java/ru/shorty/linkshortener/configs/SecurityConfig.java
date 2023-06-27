@@ -1,5 +1,8 @@
 package ru.shorty.linkshortener.configs;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,30 +17,17 @@ import ru.shorty.linkshortener.oauth2.jwt.JwtAuthFilter;
 import ru.shorty.linkshortener.oauth2.user.CustomOAuth2UserService;
 
 @Configuration
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final CustomOAuth2UserService oauth2UserService;
+    CustomOAuth2UserService oauth2UserService;
+    OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
+    OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    JwtAuthEntryPoint jwtAuthEntryPoint;
+    JwtAuthFilter jwtAuthFilter;
 
-    private final OAuth2LoginSuccessHandler oauth2LoginSuccessHandler;
-
-    private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
-
-    private final JwtAuthEntryPoint jwtAuthEntryPoint;
-
-    private final JwtAuthFilter jwtAuthFilter;
-
-    public SecurityConfig(CustomOAuth2UserService oauth2UserService,
-                          OAuth2LoginSuccessHandler oauth2LoginSuccessHandler,
-                          OAuth2LoginFailureHandler oAuth2LoginFailureHandler,
-                          JwtAuthFilter jwtAuthFilter,
-                          JwtAuthEntryPoint jwtAuthEntryPoint) {
-        this.oauth2UserService = oauth2UserService;
-        this.oauth2LoginSuccessHandler = oauth2LoginSuccessHandler;
-        this.oAuth2LoginFailureHandler = oAuth2LoginFailureHandler;
-        this.jwtAuthFilter = jwtAuthFilter;
-        this.jwtAuthEntryPoint = jwtAuthEntryPoint;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -46,8 +36,8 @@ public class SecurityConfig {
             .exceptionHandling()
             .authenticationEntryPoint(jwtAuthEntryPoint)
             .and()
-            .sessionManagement().
-            sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests()
             .requestMatchers("/api/v1/links/**").authenticated()

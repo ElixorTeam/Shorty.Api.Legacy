@@ -1,5 +1,6 @@
 package ru.shorty.linkshortener.utils;
 
+import jakarta.validation.constraints.NotNull;
 import org.apache.commons.lang.RandomStringUtils;
 import org.jsoup.Jsoup;
 

@@ -37,12 +37,12 @@ public class LinkService {
 
     public Map<String, List<LinkDto>>  getAllDtoCast(UUID userUid) {
         List<LinkDto> dtosList = linkRepository.findAllByUserUidOrderByCreateDtDesc(userUid).stream()
-            .map(this::convertLinkModelToViewDto).toList();
+            .map(this::convertLinkModelToLinkDto).toList();
         return Collections.singletonMap("data", dtosList);
     }
 
     public LinkDto getByUid(UUID userUid, UUID linkUid) {
-        return linkRepository.findByUidAndUserUid(linkUid, userUid).map(this::convertLinkModelToViewDto)
+        return linkRepository.findByUidAndUserUid(linkUid, userUid).map(this::convertLinkModelToLinkDto)
             .orElseThrow(LinkDoesNotExistsException::new);
     }
 
@@ -59,7 +59,7 @@ public class LinkService {
         Optional<UserModel> userOptional = userRepository.findByUid(userUid);
         UserModel user = userOptional.orElseThrow(() -> new RuntimeException("User not found"));
 
-        LinkModel model = convertLinkCreateDtoToModel(dto);
+        LinkModel model = convertLinkDtoToModel(dto);
         model.setUser(user);
 
         linkRepository.save(model);
@@ -75,11 +75,11 @@ public class LinkService {
 
     //region Other
 
-    public LinkModel convertLinkCreateDtoToModel(LinkDto dto) {
+    public LinkModel convertLinkDtoToModel(LinkDto dto) {
         return modelMapper.map(dto, LinkModel.class);
     }
 
-    public LinkDto convertLinkModelToViewDto(LinkModel model) {
+    public LinkDto convertLinkModelToLinkDto(LinkModel model) {
         return modelMapper.map(model, LinkDto.class);
     }
 

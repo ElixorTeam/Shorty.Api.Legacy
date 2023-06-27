@@ -1,5 +1,6 @@
 package ru.shorty.linkshortener.dto.common;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -8,8 +9,8 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 import ru.shorty.linkshortener.dto.rules.ValidationRules;
+import ru.shorty.linkshortener.dto.rules.ViewAccess;
 import ru.shorty.linkshortener.exceptions.common.ExternalRefIsNotValidException;
-import ru.shorty.linkshortener.models.UserModel;
 import ru.shorty.linkshortener.utils.UnsortedUtil;
 
 import java.util.Date;
@@ -20,27 +21,30 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LinkDto {
 
+    @JsonView(value = ViewAccess.View.class)
     @Null(groups = {ValidationRules.Create.class, ValidationRules.Update.class})
     @NotNull(groups = {ValidationRules.View.class})
     UUID uid;
 
-    @Null(groups = {ValidationRules.Create.class})
-    UserModel user;
-
-    @NotNull(groups = {ValidationRules.Create.class, ValidationRules.Update.class})
+    @JsonView(value = ViewAccess.Create.class)
+    @Length(max = 64)
+    @NotNull
     String title;
 
+    @JsonView(value = ViewAccess.Create.class)
     @Length(max = 10)
-    @NotNull(groups = {ValidationRules.Create.class})
     @Null(groups = {ValidationRules.Update.class})
+    @NotNull(groups = {ValidationRules.Create.class, ValidationRules.View.class})
     String innerRef;
 
+    @JsonView(value = ViewAccess.Create.class)
     @Length(max = 250)
     @NotBlank
-    @NotNull(groups = {ValidationRules.Create.class})
     @Null(groups = {ValidationRules.Update.class})
+    @NotNull(groups = {ValidationRules.Create.class, ValidationRules.View.class})
     String externalRef;
 
+    @JsonView(value = ViewAccess.View.class)
     @Null(groups = {ValidationRules.Create.class, ValidationRules.Update.class})
     @NotNull(groups = {ValidationRules.View.class})
     Date createDt;

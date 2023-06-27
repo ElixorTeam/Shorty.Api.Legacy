@@ -1,5 +1,6 @@
 package ru.shorty.linkshortener.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.shorty.linkshortener.dto.common.LinkDto;
 import ru.shorty.linkshortener.dto.rules.ValidationRules;
+import ru.shorty.linkshortener.dto.rules.ViewAccess;
 import ru.shorty.linkshortener.oauth2.user.UserResolver;
 import ru.shorty.linkshortener.services.LinkService;
 import ru.shorty.linkshortener.utils.MsgUtil;
@@ -33,6 +35,7 @@ public class LinkController {
     //region Path: /
 
     @GetMapping("/")
+    @JsonView(ViewAccess.View.class)
     public ResponseEntity<?> getAll() {
         UUID userUid = userResolver.getIdCurrentUser();
         return new ResponseEntity<>(linkService.getAllDtoCast(userUid), HttpStatus.OK);

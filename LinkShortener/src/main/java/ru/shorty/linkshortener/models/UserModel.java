@@ -3,9 +3,9 @@ package ru.shorty.linkshortener.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 import ru.shorty.linkshortener.oauth2.providers.common.AuthProvider;
 
@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.UUID;
 
 
-@Getter
-@Setter
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "USERS", uniqueConstraints = {
     @UniqueConstraint(name = "UQ_USER_PROVIDERS", columnNames = {"PROVIDER", "PROVIDER_ID"})
@@ -22,34 +22,26 @@ import java.util.UUID;
 public class UserModel {
 
     @Id
-    @UuidGenerator()
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "UUID", unique = true)
-    private UUID uid;
+    UUID uid;
 
-    @NotNull
     @Column(name = "NAME", nullable = false, length = 75)
-    private String name;
+    String name;
 
     @Email
     @Column(name = "EMAIL", length = 50)
-    private String email;
+    String email;
 
-    @NotNull
     @Column(name = "PROVIDER_ID", length = 50)
-    private String providerId;
+    String providerId;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "PROVIDER", length = 50)
-    private AuthProvider provider;
+    AuthProvider provider;
 
-    @NonNull
-    @Temporal(TemporalType.TIMESTAMP)
+    @CreationTimestamp
     @Column(name = "CREATE_DT", nullable = false)
-    private Date createDt;
+    Date createDt;
 
-    @PrePersist
-    private void onCreate() {
-        createDt = new Date();
-    }
 }

@@ -1,19 +1,23 @@
 package ru.shorty.linkshortener.properties;
 
+import lombok.AccessLevel;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.FieldDefaults;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "app")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AppProperties {
 
-    private String FrontUrl;
-    private String FrontRedirectUrl;
+    String FrontUrl;
+    String FrontRedirectUrl;
 
-    private String jwtTokenSecret;
-    private String authorizedRedirectUrl;
-    private long tokenExpirationMillis;
+    String jwtTokenSecret;
+    String authorizedRedirectUrl;
+    long tokenExpirationMillis;
 
 }

@@ -18,23 +18,23 @@ public class LinkModel {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "UUID", unique = true)
-    private UUID uid;
+    UUID uid;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "USER_UID", nullable = false)
-    private UserModel user;
+    UserModel user;
 
     @Column(name = "TITLE", nullable = false, length = 64)
-    private String title;
+    String title;
 
     @Column(name = "INNER_REF", unique = true, nullable = false, length = 10)
-    private String innerRef;
+    String innerRef;
 
     @Column(name = "EXTERNAL_REF", nullable = false, length = 250)
-    private String externalRef;
+    String externalRef;
 
     @CreationTimestamp
     @Column(name = "CREATE_DT", nullable = false)
-    private Date createDt;
+    Date createDt;
 
 }

@@ -1,32 +1,29 @@
 package ru.shorty.linkshortener.oauth2.handlers;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
-import ru.shorty.linkshortener.dto.common.AuthDto;
 import ru.shorty.linkshortener.oauth2.jwt.JwtGenerator;
 import ru.shorty.linkshortener.properties.AppProperties;
 
 import java.io.IOException;
 
-@Component
+@Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private final JwtGenerator tokenGenerator;
-
-    private final AppProperties appProperties;
-
-    public OAuth2LoginSuccessHandler(AppProperties appProperties, JwtGenerator tokenGenerator) {
-        this.appProperties = appProperties;
-        this.tokenGenerator = tokenGenerator;
-    }
+    JwtGenerator tokenGenerator;
+    AppProperties appProperties;
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
@@ -40,9 +37,8 @@ public class OAuth2LoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String redirectUri = appProperties.getAuthorizedRedirectUrl();
-        AuthDto token = tokenGenerator.generateTokenDto(authentication);
-        logger.debug(token.getAccessToken());
+        String token = tokenGenerator.generateJWT(authentication);
         return UriComponentsBuilder.fromUriString(redirectUri).
-            queryParam("jwt", token.getAccessToken()).build().toUriString();
+            queryParam("jwt", token).build().toUriString();
     }
 }

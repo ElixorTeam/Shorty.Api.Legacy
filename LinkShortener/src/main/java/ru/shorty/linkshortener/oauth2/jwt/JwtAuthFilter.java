@@ -4,7 +4,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AccessLevel;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,16 +23,14 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Service
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private static final Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
-    private final JwtGenerator tokenGenerator;
-    private final CustomUserDetailsService customUserDetailsService;
+    static Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
+    JwtGenerator tokenGenerator;
+    CustomUserDetailsService customUserDetailsService;
 
-    public JwtAuthFilter(JwtGenerator tokenGenerator, CustomUserDetailsService customUserDetailsService) {
-        this.tokenGenerator = tokenGenerator;
-        this.customUserDetailsService = customUserDetailsService;
-    }
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
