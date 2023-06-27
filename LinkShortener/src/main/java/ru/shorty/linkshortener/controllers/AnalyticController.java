@@ -33,6 +33,11 @@ public class AnalyticController {
         return new ResponseEntity<>(redirectService.getBaseAnalytics(linkUid), HttpStatus.OK);
     }
 
+    @GetMapping("/time_line/{linkUid}")
+    public ResponseEntity<?> getTimeLineAnalytics(@PathVariable UUID linkUid) {
+        return new ResponseEntity<>(redirectService.getTimeLineAnalytics(linkUid), HttpStatus.OK);
+    }
+
     @ExceptionHandler
     public ResponseEntity<?> externalRefDoesNotExists(ExternalRefDoesNotExistsException exception) {
         return new ResponseEntity<>(MsgUtil.createError("errorExternalRefNotExists"), HttpStatus.BAD_REQUEST);

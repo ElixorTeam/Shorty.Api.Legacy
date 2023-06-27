@@ -11,6 +11,7 @@ import ru.shorty.linkshortener.utils.UnsortedUtil;
 import ua_parser.Client;
 import ua_parser.Parser;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -23,6 +24,24 @@ public class AnalyticService {
                            RedirectRepository redirectRepository) {
         this.linkRepository = linkRepository;
         this.redirectRepository = redirectRepository;
+    }
+
+    //region Public
+
+    public Map<String, Object> getBaseAnalytics(UUID linkUid) {
+        LinkModel link = linkRepository.findById(linkUid).orElseThrow(ExternalRefDoesNotExistsException::new);
+
+        Map<String, Object> jsonMap = new HashMap<>();
+        List<Map<String, Object>> osType = getGroupJson(redirectRepository.getGroupByOsType(linkUid));
+        List<Map<String, Object>> deviceType = getGroupJson(redirectRepository.getGroupByDeviceType(linkUid));
+        List<Map<String, Object>> browserType = getGroupJson(redirectRepository.getGroupByBrowserType(linkUid));
+
+        jsonMap.put("os", osType);
+        jsonMap.put("devices", deviceType);
+        jsonMap.put("browsers", browserType);
+        jsonMap.put("views", createViewsMap(linkUid));
+
+        return jsonMap;
     }
 
     public Map<String, String> getExternalRefByInner(String innerRef, String userAgent, String clientHeader) {
@@ -45,21 +64,16 @@ public class AnalyticService {
         return Collections.singletonMap("externalRef", linkModel.getExternalRef());
     }
 
-    public Map<String, Object> getBaseAnalytics(UUID linkUid) {
+    public List<Map<String, Object>> getTimeLineAnalytics(UUID linkUid) {
         LinkModel link = linkRepository.findById(linkUid).orElseThrow(ExternalRefDoesNotExistsException::new);
-
-        Map<String, Object> jsonMap = new HashMap<>();
-        List<Map<String, Object>> osType = getGroupJson(redirectRepository.getGroupByOsType(linkUid));
-        List<Map<String, Object>> deviceType = getGroupJson(redirectRepository.getGroupByDeviceType(linkUid));
-        List<Map<String, Object>> browserType = getGroupJson(redirectRepository.getGroupByBrowserType(linkUid));
-
-        jsonMap.put("os", osType);
-        jsonMap.put("devices", deviceType);
-        jsonMap.put("browsers", browserType);
-        jsonMap.put("views", createViewsMap(linkUid));
-
-        return jsonMap;
+        LocalDate currentDate = LocalDate.now().minusDays(7);
+        return redirectRepository.getGroupByDays(linkUid, currentDate);
     }
+
+
+    //endregion
+
+    //region Private
 
     private Map<String, Long> createViewsMap(UUID linkUid) {
         Map<String, Long> data = new HashMap<>();
@@ -79,5 +93,7 @@ public class AnalyticService {
         }
         return data;
     }
+
+    //endregion
 
 }

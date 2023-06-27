@@ -5,7 +5,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.shorty.linkshortener.models.LinkRedirectModel;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface RedirectRepository extends JpaRepository<LinkRedirectModel, UUID> {
@@ -26,5 +28,7 @@ public interface RedirectRepository extends JpaRepository<LinkRedirectModel, UUI
     @Query("SELECT COALESCE(AVG(countPerDay), 0) FROM (SELECT COUNT(lr) AS countPerDay FROM LinkRedirectModel lr WHERE lr.link.uid = :linkUid GROUP BY FUNCTION('DATE', lr.createDt))")
     Double countAvgPerDay(@Param("linkUid") UUID linkUid);
 
+    @Query("SELECT DATE(l.createDt) AS date, COUNT(l) AS count FROM LinkModel l WHERE l.uid = :linkUid AND Date(l.createDt) >= :startDate GROUP BY DATE(l.createDt)")
+    List<Map<String, Object>> getGroupByDays(@Param("linkUid") UUID linkUid, @Param("startDate") LocalDate startDate);
 
 }
