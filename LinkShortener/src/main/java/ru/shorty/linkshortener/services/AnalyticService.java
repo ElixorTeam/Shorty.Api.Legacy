@@ -32,9 +32,9 @@ public class AnalyticService {
         LinkModel link = linkRepository.findById(linkUid).orElseThrow(ExternalRefDoesNotExistsException::new);
 
         Map<String, Object> jsonMap = new HashMap<>();
-        List<Map<String, Object>> osType = getGroupJson(redirectRepository.getGroupByOsType(linkUid));
-        List<Map<String, Object>> deviceType = getGroupJson(redirectRepository.getGroupByDeviceType(linkUid));
-        List<Map<String, Object>> browserType = getGroupJson(redirectRepository.getGroupByBrowserType(linkUid));
+        List<Map<String, Object>> osType = redirectRepository.getGroupByOsType(linkUid);
+        List<Map<String, Object>> deviceType = redirectRepository.getGroupByDeviceType(linkUid);
+        List<Map<String, Object>> browserType = redirectRepository.getGroupByBrowserType(linkUid);
 
         jsonMap.put("os", osType);
         jsonMap.put("devices", deviceType);
@@ -76,22 +76,11 @@ public class AnalyticService {
     //region Private
 
     private Map<String, Long> createViewsMap(UUID linkUid) {
-        Map<String, Long> data = new HashMap<>();
-        data.put("total", redirectRepository.countByLinkUid(linkUid));
-        data.put("unique", redirectRepository.countUnique(linkUid));
-        data.put("avg_day", Math.round(redirectRepository.countAvgPerDay(linkUid)));
-        return data;
-    }
-
-    private List<Map<String, Object>> getGroupJson(List<Object[]> groups) {
-        List<Map<String, Object>> data = new ArrayList<>();
-        for (Object[] group : groups) {
-            Map<String, Object> readyGroup = new HashMap<>();
-            readyGroup.put("name", group[0]);
-            readyGroup.put("value", group[1]);
-            data.add(readyGroup);
-        }
-        return data;
+        return new HashMap<>() {{
+            put("total", redirectRepository.countByLinkUid(linkUid));
+            put("unique", redirectRepository.countUnique(linkUid));
+            put("avg_day", Math.round(redirectRepository.countAvgPerDay(linkUid)));
+        }};
     }
 
     //endregion
