@@ -1,4 +1,4 @@
-package ru.shorty.linkshortener.exceptions;
+package ru.shorty.linkshortener.exceptions.common;
 
 public class ExternalRefDoesNotExistsException extends RuntimeException{
 }

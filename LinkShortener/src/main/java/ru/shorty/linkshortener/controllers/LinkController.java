@@ -7,9 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.shorty.linkshortener.dto.objects.LinkDto;
+import ru.shorty.linkshortener.dto.common.LinkDto;
 import ru.shorty.linkshortener.dto.rules.ValidationRules;
-import ru.shorty.linkshortener.exceptions.*;
 import ru.shorty.linkshortener.oauth2.user.UserResolver;
 import ru.shorty.linkshortener.services.LinkService;
 import ru.shorty.linkshortener.utils.MsgUtil;
@@ -72,28 +71,5 @@ public class LinkController {
 
     //endregion
 
-    //region Exceptions Handler
-
-    @ExceptionHandler
-    public ResponseEntity<?> linkDoesNotExists(LinkDoesNotExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("errorLinkNotExists"), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> externalRefIsNotValid(ExternalRefIsNotValidException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("errorExternalRefNotValid"), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> innerRefAlreadyExists(InnerRefAlreadyExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("errorInnerRefExists"), HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> titleIsNullOrEmpty(TitleIsNullException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("titleIsNullOrEmpty"), HttpStatus.BAD_REQUEST);
-    }
-
-    //endregion
 
 }

@@ -2,7 +2,7 @@ package ru.shorty.linkshortener.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.shorty.linkshortener.exceptions.ExternalRefDoesNotExistsException;
+import ru.shorty.linkshortener.exceptions.common.ExternalRefDoesNotExistsException;
 import ru.shorty.linkshortener.models.LinkModel;
 import ru.shorty.linkshortener.models.LinkRedirectModel;
 import ru.shorty.linkshortener.repositories.LinkRepository;

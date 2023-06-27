@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import ru.shorty.linkshortener.dto.objects.AuthDto;
+import ru.shorty.linkshortener.dto.common.AuthDto;
 import ru.shorty.linkshortener.oauth2.user.CustomUserDetails;
 import ru.shorty.linkshortener.properties.AppProperties;
 

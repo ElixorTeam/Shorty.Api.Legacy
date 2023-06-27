@@ -1,4 +1,4 @@
-package ru.shorty.linkshortener.dto.objects;
+package ru.shorty.linkshortener.dto.common;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
 import ru.shorty.linkshortener.dto.rules.ValidationRules;
-import ru.shorty.linkshortener.exceptions.ExternalRefIsNotValidException;
+import ru.shorty.linkshortener.exceptions.common.ExternalRefIsNotValidException;
 import ru.shorty.linkshortener.models.UserModel;
 import ru.shorty.linkshortener.utils.UnsortedUtil;
 
@@ -22,28 +22,28 @@ public class LinkDto {
 
     @Null(groups = {ValidationRules.Create.class, ValidationRules.Update.class})
     @NotNull(groups = {ValidationRules.View.class})
-    private UUID uid;
+    UUID uid;
 
     @Null(groups = {ValidationRules.Create.class})
-    private UserModel user;
+    UserModel user;
 
     @NotNull(groups = {ValidationRules.Create.class, ValidationRules.Update.class})
-    private String title;
+    String title;
 
     @Length(max = 10)
     @NotNull(groups = {ValidationRules.Create.class})
     @Null(groups = {ValidationRules.Update.class})
-    private String innerRef;
+    String innerRef;
 
     @Length(max = 250)
     @NotBlank
     @NotNull(groups = {ValidationRules.Create.class})
     @Null(groups = {ValidationRules.Update.class})
-    private String externalRef;
+    String externalRef;
 
     @Null(groups = {ValidationRules.Create.class, ValidationRules.Update.class})
     @NotNull(groups = {ValidationRules.View.class})
-    private Date createDt;
+    Date createDt;
 
     public String getInnerRef() {
         if (innerRef.isEmpty())

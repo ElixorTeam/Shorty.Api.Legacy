@@ -1,4 +1,4 @@
-package ru.shorty.linkshortener.dto.objects;
+package ru.shorty.linkshortener.dto.common;
 
 import lombok.Data;
 

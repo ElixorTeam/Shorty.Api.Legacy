@@ -7,9 +7,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.shorty.linkshortener.exceptions.ExternalRefDoesNotExistsException;
 import ru.shorty.linkshortener.services.AnalyticService;
-import ru.shorty.linkshortener.utils.MsgUtil;
 
 import java.util.UUID;
 
@@ -38,10 +36,5 @@ public class AnalyticController {
     @GetMapping("/time_line/{linkUid}")
     public ResponseEntity<?> getTimeLineAnalytics(@PathVariable UUID linkUid) {
         return new ResponseEntity<>(redirectService.getTimeLineAnalytics(linkUid), HttpStatus.OK);
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<?> externalRefDoesNotExists(ExternalRefDoesNotExistsException exception) {
-        return new ResponseEntity<>(MsgUtil.createError("errorExternalRefNotExists"), HttpStatus.BAD_REQUEST);
     }
 }

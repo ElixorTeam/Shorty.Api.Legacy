@@ -1,7 +1,7 @@
 package ru.shorty.linkshortener.oauth2.user;
 
 import org.springframework.stereotype.Service;
-import ru.shorty.linkshortener.exceptions.ResourceNotFoundException;
+import ru.shorty.linkshortener.exceptions.common.ResourceNotFoundException;
 import ru.shorty.linkshortener.models.UserModel;
 import ru.shorty.linkshortener.repositories.UserRepository;
 
