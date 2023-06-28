@@ -20,7 +20,6 @@ public class AuthController {
 
     UserResolver userResolver;
 
-
     @GetMapping("/status")
     public ResponseEntity<?> getAll() {
         String userName = userResolver.getCurrentUser().getName();

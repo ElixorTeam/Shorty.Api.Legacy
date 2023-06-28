@@ -7,10 +7,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.shorty.linkshortener.dto.common.LinkDto;
-import ru.shorty.linkshortener.exceptions.common.LinkDoesNotExistsException;
+import ru.shorty.linkshortener.exceptions.common.ExternalRefDoesNotExistsException;
 import ru.shorty.linkshortener.exceptions.common.InnerRefAlreadyExistsException;
+import ru.shorty.linkshortener.exceptions.common.LinkDoesNotExistsException;
 import ru.shorty.linkshortener.models.LinkModel;
 import ru.shorty.linkshortener.models.UserModel;
+import ru.shorty.linkshortener.properties.AppProperties;
 import ru.shorty.linkshortener.repositories.LinkRepository;
 import ru.shorty.linkshortener.repositories.UserRepository;
 
@@ -30,6 +32,7 @@ public class LinkService {
 
     UserRepository userRepository;
 
+    AppProperties appProperties;
 
     //endregion
 
@@ -55,6 +58,9 @@ public class LinkService {
     public void createLink(UUID userUid, LinkDto dto) {
         if (linkRepository.existsByInnerRef(dto.getInnerRef()))
             throw new InnerRefAlreadyExistsException();
+
+        if (dto.getExternalRef().contains(appProperties.getFrontRedirectUrl()))
+            throw new ExternalRefDoesNotExistsException();
 
         Optional<UserModel> userOptional = userRepository.findByUid(userUid);
         UserModel user = userOptional.orElseThrow(() -> new RuntimeException("User not found"));

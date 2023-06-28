@@ -16,9 +16,9 @@ import ru.shorty.linkshortener.services.LinkService;
 import ru.shorty.linkshortener.utils.MsgUtil;
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/links")
 public class LinkController {
 
@@ -29,8 +29,6 @@ public class LinkController {
     LinkService linkService;
 
     //endregion
-
-    //region Rest methods
 
     //region Path: /
 
@@ -73,6 +71,5 @@ public class LinkController {
     }
 
     //endregion
-
 
 }
