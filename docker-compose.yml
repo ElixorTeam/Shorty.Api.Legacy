@@ -1,5 +1,21 @@
 version: "3"
+networks:
+    caddy:
 services:
+    caddy:
+        image: caddy:latest
+        container_name: caddy
+        restart: unless-stopped
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - $PWD/caddy/Caddyfile:/etc/caddy/Caddyfile
+            - $PWD/caddy/site:/srv
+            - $PWD/caddy/caddy_data:/data
+            - $PWD/caddy/caddy_config:/config
+        networks:
+            - caddy
     postgres:
         container_name: postgres
         image: postgres:alpine
@@ -35,11 +51,19 @@ services:
             - "lock_timeout=1s"
             - "-c"
             - "statement_timeout=60s"
+        networks:
+            - caddy
         deploy:
             resources:
                 limits:
                     cpus: '1'
                     memory: "1G"
+    front:
+        build: ?
+        container_name: front
+        restart: unless-stopped
+        networks:
+            - caddy
     eureka:
         image: baggerfast/shorty_eureka_server:latest
         container_name: "eureka"
@@ -64,3 +88,5 @@ services:
                 condition: service_started
 volumes:
     shorty_sql:
+    caddy_data:
+    caddy_config:
