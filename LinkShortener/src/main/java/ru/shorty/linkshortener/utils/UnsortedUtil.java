@@ -1,11 +1,11 @@
 package ru.shorty.linkshortener.utils;
-
-import jakarta.validation.constraints.NotNull;
+;
 import org.apache.commons.lang.RandomStringUtils;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 
 public class UnsortedUtil {
@@ -16,6 +16,12 @@ public class UnsortedUtil {
 
     public static String getTitleFromUrl(String url) throws IOException {
         return Jsoup.connect(url).get().title();
+    }
+
+    public static Boolean getRegexStatusOfUrl(String url) {
+        String regex = "(https://)((?:[-;:&=+$,\\w]+@)?[A-Za-z0-9.-]+|(?:www.|[-;:&=+$,\\w]+@)" +
+            "[A-Za-z0-9.-]+)(/[+~%/.\\w-]*)??([-+=&;%@.\\w_])#?([.!/\\\\w]*)?";
+        return Pattern.compile(regex).matcher(url).matches();
     }
 
     public static UUID getUidFromStringOrEmpty(String uuid) {
