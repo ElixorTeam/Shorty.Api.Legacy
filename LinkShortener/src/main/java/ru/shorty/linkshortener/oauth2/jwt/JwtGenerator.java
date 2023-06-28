@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import ru.shorty.linkshortener.exceptions.common.JwtTokenValidException;
 import ru.shorty.linkshortener.oauth2.user.CustomUserDetails;
 import ru.shorty.linkshortener.properties.AppProperties;
 
@@ -53,7 +53,7 @@ public class JwtGenerator {
             return UUID.fromString(decodedJWT.getSubject());
         } catch (JWTDecodeException e) {
             logger.error("Invalid JWT token: {}", jwtToken, e);
-            return null;
+            throw new JwtTokenValidException();
         }
     }
 
@@ -64,7 +64,7 @@ public class JwtGenerator {
             return true;
         } catch (JWTVerificationException ex) {
             logger.error("Invalid JWT token: {}", authToken, ex);
-            throw new AuthenticationCredentialsNotFoundException("Jwt was expired or incorrect");
+            throw new JwtTokenValidException();
         }
     }
 }

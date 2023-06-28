@@ -8,8 +8,6 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +15,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.shorty.linkshortener.exceptions.common.UserNotFoundException;
 import ru.shorty.linkshortener.oauth2.user.CustomUserDetailsService;
 
 import java.io.IOException;
@@ -27,10 +26,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    static Logger logger = LoggerFactory.getLogger(JwtAuthFilter.class);
     JwtGenerator tokenGenerator;
     CustomUserDetailsService customUserDetailsService;
-
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
@@ -48,7 +45,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception ex) {
-            logger.error("Could not set user authentication in security context", ex);
+            throw new UserNotFoundException("NO DATA");
         }
 
         filterChain.doFilter(request, response);

@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import ru.shorty.linkshortener.exceptions.common.ResourceNotFoundException;
+import ru.shorty.linkshortener.exceptions.common.UserNotFoundException;
 import ru.shorty.linkshortener.models.UserModel;
 import ru.shorty.linkshortener.repositories.UserRepository;
 
@@ -21,7 +21,7 @@ public class CustomUserDetailsService {
 
     public CustomUserDetails loadUserByUid(UUID uid) {
         UserModel user = userRepository.findByUid(uid).orElseThrow(() ->
-            new ResourceNotFoundException("User", "id", uid));
+            new UserNotFoundException(uid));
         return CustomUserDetails.create(user);
     }
 }

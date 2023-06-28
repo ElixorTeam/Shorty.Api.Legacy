@@ -14,6 +14,7 @@ import ru.shorty.linkshortener.dto.rules.ViewAccess;
 import ru.shorty.linkshortener.oauth2.user.UserResolver;
 import ru.shorty.linkshortener.services.LinkService;
 import ru.shorty.linkshortener.utils.MsgUtil;
+
 import java.util.UUID;
 
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -32,14 +33,14 @@ public class LinkController {
 
     //region Path: /
 
-    @GetMapping("/")
+    @GetMapping
     @JsonView(ViewAccess.View.class)
     public ResponseEntity<?> getAll() {
         UUID userUid = userResolver.getIdCurrentUser();
         return new ResponseEntity<>(linkService.getAllDtoCast(userUid), HttpStatus.OK);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<?> createLink(@Validated(ValidationRules.Create.class) @RequestBody LinkDto dto) {
         UUID userUid = userResolver.getIdCurrentUser();
         linkService.createLink(userUid, dto);

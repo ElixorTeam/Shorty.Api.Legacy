@@ -16,9 +16,9 @@ import ru.shorty.linkshortener.oauth2.jwt.JwtAuthEntryPoint;
 import ru.shorty.linkshortener.oauth2.jwt.JwtAuthFilter;
 import ru.shorty.linkshortener.oauth2.user.CustomOAuth2UserService;
 
-@Configuration
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
