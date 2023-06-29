@@ -35,7 +35,7 @@ public interface RedirectRepository extends JpaRepository<LinkRedirectModel, UUI
     Double countAvgPerDay(@Param("linkUid") UUID linkUid);
 
     @Query("SELECT DATE(l.createDt) AS date, COUNT(l) AS count FROM LinkRedirectModel l WHERE l.link.uid = :linkUid " +
-        "AND Date(l.createDt) >= :startDate GROUP BY DATE(l.createDt)")
+        "AND Date(l.createDt) >= :startDate GROUP BY DATE(l.createDt) ORDER BY DATE(l.createDt) ASC")
     List<Map<String, Object>> getGroupByDays(@Param("linkUid") UUID linkUid, @Param("startDate") LocalDate startDate);
 
 }
