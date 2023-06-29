@@ -19,7 +19,7 @@ public class UnsortedUtil {
     }
 
     public static Boolean getRegexStatusOfUrl(String url) {
-        String regex = "^(https)://[-a-zA-Z0-9+&@#/%?=~|!:,.;]*[-a-zA-Z0-9+&@#/%=~|]";
+        String regex = "^https?://(?:www\\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b[-a-zA-Z0-9()@:%_+.~#?&/=]*$";
         return Pattern.compile(regex).matcher(url).matches();
     }
 
