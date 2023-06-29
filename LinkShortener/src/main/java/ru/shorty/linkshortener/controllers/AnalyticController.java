@@ -20,13 +20,6 @@ public class AnalyticController {
 
     AnalyticService redirectService;
 
-    @GetMapping("/external_ref_by_inner/{innerRef}")
-    public ResponseEntity<?> getExternalRefByInner(HttpServletRequest request, @PathVariable String innerRef) {
-        String header = request.getHeader("CLIENT_UID");
-        String userAgent = request.getHeader("User-Agent");
-        return new ResponseEntity<>(redirectService.getExternalRefByInner(innerRef, userAgent, header), HttpStatus.OK);
-    }
-
     @GetMapping("/{linkUid}")
     public ResponseEntity<?> getBaseAnalytics(@PathVariable UUID linkUid) {
         return new ResponseEntity<>(redirectService.getBaseAnalytics(linkUid), HttpStatus.OK);

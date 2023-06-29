@@ -15,6 +15,7 @@ import ru.shorty.linkshortener.models.UserModel;
 import ru.shorty.linkshortener.properties.AppProperties;
 import ru.shorty.linkshortener.repositories.LinkRepository;
 import ru.shorty.linkshortener.repositories.UserRepository;
+import ru.shorty.linkshortener.utils.UnsortedUtil;
 
 import java.util.*;
 
@@ -58,6 +59,9 @@ public class LinkService {
     public void createLink(UUID userUid, LinkDto dto) {
         if (linkRepository.existsByInnerRef(dto.getInnerRef()))
             throw new InnerRefAlreadyExistsException();
+
+        if (!UnsortedUtil.getRegexStatusOfUrl(dto.getExternalRef()))
+            throw new ExternalRefIsNotValidException();
 
         if (dto.getExternalRef().contains(appProperties.getFrontRedirectUrl()))
             throw new ExternalRefIsNotValidException();

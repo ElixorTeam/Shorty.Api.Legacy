@@ -55,12 +55,6 @@ public class LinkDto {
         return innerRef;
     }
 
-    public void setExternalRef(String externalRef) {
-        if (!UnsortedUtil.getRegexStatusOfUrl(externalRef))
-            throw new ExternalRefIsNotValidException();
-        this.externalRef = externalRef;
-    }
-
     public String getTitle() {
         if (!title.isEmpty())
             return title;
