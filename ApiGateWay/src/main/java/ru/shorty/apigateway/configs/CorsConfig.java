@@ -7,6 +7,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
 @Configuration
 public class CorsConfig {
 
@@ -22,6 +24,10 @@ public class CorsConfig {
 
         if (isDevActive())
             config.addAllowedOrigin("*");
+        else {
+            config.addAllowedOrigin(environment.getProperty("FRONT_DOMAIN"));
+            config.addAllowedOrigin(environment.getProperty("FRONT_REDIRECT_DOMAIN"));
+        }
 
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
@@ -32,12 +38,7 @@ public class CorsConfig {
     }
 
     private boolean isDevActive() {
-        String[] activeProfiles = environment.getActiveProfiles();
-
-        for (String profile : activeProfiles)
-            if (profile.equalsIgnoreCase("dev"))
-                return true;
-        return false;
+        return Arrays.asList(environment.getActiveProfiles()).contains("dev");
     }
 
 }
